@@ -13,11 +13,12 @@ function fileFilter(req, file, cb) {
   cb(null, true);
 }
 
-const uploadProductImage = multer({
+// Reusable for any admin image upload (product photos, site logo, etc.).
+const uploadImage = multer({
   storage,
   fileFilter,
   // Stay under Vercel Serverless Functions' request body limit (4.5MB).
   limits: { fileSize: 4 * 1024 * 1024 }
 });
 
-module.exports = { uploadProductImage };
+module.exports = { uploadImage };

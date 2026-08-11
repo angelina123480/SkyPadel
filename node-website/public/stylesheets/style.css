@@ -219,6 +219,8 @@ a { transition: color .15s ease; }
   box-shadow: inset -3px -3px 6px rgba(0,0,0,0.3), inset 2px 2px 4px rgba(255,255,255,0.4);
 }
 .brand-ball-sm { width: 16px; height: 16px; margin-right: 6px; }
+.navbar-logo { height: 34px; width: auto; vertical-align: middle; }
+.footer-logo { height: 24px; width: auto; vertical-align: middle; }
 
 .ball-graphic-hero {
   position: absolute;

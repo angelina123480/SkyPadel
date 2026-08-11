@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Site Settings</h1>
+    <p>Manage SkyPadel's brand logo, shown in the navbar and footer across the whole site.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
+      <a href="/admin/delivery-zones">Delivery Zones</a>
+      <a href="/admin/settings" class="active">Settings</a>
+    </div>
+
+    <% if (updated) { %><div class="form-success-banner">Saved.</div><% } %>
+    <% if (error) { %><div class="form-error-banner"><%= error %></div><% } %>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="checkout-card">
+          <h3>Logo</h3>
+
+          <% if (logoUrl) { %>
+          <img src="<%= logoUrl %>" alt="Current logo" class="product-form-image-preview">
+          <p class="admin-empty-note">This is your current logo — upload a new image below to replace it.</p>
+          <% } else { %>
+          <p class="admin-empty-note">No logo uploaded yet — the navbar and footer show the default "SkyPadel" wordmark until you add one.</p>
+          <% } %>
+
+          <form class="sky-form" method="POST" action="/admin/settings/logo" enctype="multipart/form-data">
+            <div class="form-group">
+              <label for="logo">Upload Image</label>
+              <input type="file" id="logo" name="logo" accept="image/png,image/jpeg,image/webp,image/svg+xml" required>
+            </div>
+            <button type="submit" class="btn-sky btn-sky-yellow"><%= logoUrl ? 'Replace Logo' : 'Upload Logo' %></button>
+          </form>
+
+          <% if (logoUrl) { %>
+          <button type="button" class="btn-sky btn-sky-outline-dark" id="remove-logo-btn" style="margin-top:14px;">Remove Logo</button>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+<script>
+  var removeBtn = document.getElementById('remove-logo-btn');
+  if (removeBtn) {
+    removeBtn.addEventListener('click', function () {
+      if (!confirm('Remove the logo and revert to the default wordmark?')) return;
+      fetch('/admin/settings/logo', { method: 'DELETE' }).then(function () { window.location.reload(); });
+    });
+  }
+</script>
+</html>

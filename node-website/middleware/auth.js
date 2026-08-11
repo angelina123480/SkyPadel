@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Cart = require('../models/Cart');
+const SiteSettings = require('../models/SiteSettings');
 
 function adminEmails() {
   return (process.env.ADMIN_EMAILS || '')
@@ -30,6 +31,7 @@ async function attachUser(req, res, next) {
     res.locals.isSignedIn = Boolean(currentUser);
     res.locals.isAdmin = Boolean(currentUser && currentUser.role === 'admin');
     res.locals.cartCount = req.session.cartId ? await Cart.countItems(req.session.cartId) : 0;
+    res.locals.logoUrl = await SiteSettings.get('logo_url');
     next();
   } catch (err) {
     next(err);

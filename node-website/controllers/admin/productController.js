@@ -60,7 +60,7 @@ async function create(req, res, next) {
 
     let imagePath;
     try {
-      imagePath = await imageStorage.uploadProductImage(req.file);
+      imagePath = await imageStorage.uploadImage(req.file, 'products');
     } catch (uploadErr) {
       return res.status(400).json({ ok: false, errors: { image: uploadErr.message } });
     }
@@ -101,7 +101,7 @@ async function update(req, res, next) {
     let imagePath = null;
     if (req.file) {
       try {
-        imagePath = await imageStorage.uploadProductImage(req.file);
+        imagePath = await imageStorage.uploadImage(req.file, 'products');
       } catch (uploadErr) {
         return res.status(400).json({ ok: false, errors: { image: uploadErr.message } });
       }

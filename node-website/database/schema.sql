@@ -141,6 +141,11 @@ INSERT INTO delivery_zones (name) VALUES
   ('Beqaa'), ('Baalbek-Hermel'), ('South Lebanon'), ('Nabatieh')
 ON CONFLICT (name) DO NOTHING;
 
+CREATE TABLE IF NOT EXISTS site_settings (
+  key            VARCHAR(60) PRIMARY KEY,
+  value          TEXT
+);
+
 CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON cart_items(cart_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
