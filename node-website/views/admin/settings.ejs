@@ -9,7 +9,7 @@
 <div class="page-hero page-hero-sm">
   <div class="container text-center">
     <h1>Site Settings</h1>
-    <p>Manage SkyPadel's brand logo, shown in the navbar and footer across the whole site.</p>
+    <p>Manage the icon shown in the browser tab across the whole site. The "SkyPadel" text in the navbar and footer stays as-is.</p>
   </div>
 </div>
 
@@ -31,25 +31,26 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="checkout-card">
-          <h3>Logo</h3>
+          <h3>Browser Tab Icon</h3>
 
           <% if (logoUrl) { %>
-          <img src="<%= logoUrl %>" alt="Current logo" class="product-form-image-preview">
-          <p class="admin-empty-note">This is your current logo — upload a new image below to replace it.</p>
+          <img src="<%= logoUrl %>" alt="Current tab icon" class="product-form-image-preview" style="max-width:64px;">
+          <p class="admin-empty-note">This is your current tab icon — upload a new image below to replace it.</p>
           <% } else { %>
-          <p class="admin-empty-note">No logo uploaded yet — the navbar and footer show the default "SkyPadel" wordmark until you add one.</p>
+          <p class="admin-empty-note">No tab icon uploaded yet — browsers show no icon for the tab until you add one.</p>
           <% } %>
 
           <form class="sky-form" method="POST" action="/admin/settings/logo" enctype="multipart/form-data">
             <div class="form-group">
               <label for="logo">Upload Image</label>
               <input type="file" id="logo" name="logo" accept="image/png,image/jpeg,image/webp,image/svg+xml" required>
+              <small style="display:block; color: var(--sky-text-light); margin-top:6px;">Best results with a small, roughly square image (e.g. 64&times;64).</small>
             </div>
-            <button type="submit" class="btn-sky btn-sky-yellow"><%= logoUrl ? 'Replace Logo' : 'Upload Logo' %></button>
+            <button type="submit" class="btn-sky btn-sky-yellow"><%= logoUrl ? 'Replace Icon' : 'Upload Icon' %></button>
           </form>
 
           <% if (logoUrl) { %>
-          <button type="button" class="btn-sky btn-sky-outline-dark" id="remove-logo-btn" style="margin-top:14px;">Remove Logo</button>
+          <button type="button" class="btn-sky btn-sky-outline-dark" id="remove-logo-btn" style="margin-top:14px;">Remove Icon</button>
           <% } %>
         </div>
       </div>
@@ -64,7 +65,7 @@
   var removeBtn = document.getElementById('remove-logo-btn');
   if (removeBtn) {
     removeBtn.addEventListener('click', function () {
-      if (!confirm('Remove the logo and revert to the default wordmark?')) return;
+      if (!confirm('Remove the tab icon?')) return;
       fetch('/admin/settings/logo', { method: 'DELETE' }).then(function () { window.location.reload(); });
     });
   }
