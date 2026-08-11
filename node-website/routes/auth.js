@@ -1,32 +1,19 @@
-var express = require('express');
-var router = express.Router();
-var clerkAuth = require('../services/clerkAuth');
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController');
 
-function notConfigured(res) {
-  return res.status(503).render('auth/not-configured', { page: 'Sign In', menuId: '' });
-}
+router.get('/register', authController.showRegister);
+router.post('/register', authController.register);
 
-// Clerk's <SignIn/> component handles its own sub-steps (verify, forgot
-// password, etc.) client-side, so every /sign-in/* path renders the same page.
-router.get(['/sign-in', '/sign-in*'], function (req, res) {
-  if (!clerkAuth.isConfigured) return notConfigured(res);
-  res.render('auth/sign-in', { page: 'Sign In', menuId: '' });
-});
+router.get('/login', authController.showLogin);
+router.post('/login', authController.login);
 
-router.get(['/sign-up', '/sign-up*'], function (req, res) {
-  if (!clerkAuth.isConfigured) return notConfigured(res);
-  res.render('auth/sign-up', { page: 'Sign Up', menuId: '' });
-});
+router.post('/logout', authController.logout);
 
-// Landing spot after a successful sign-in/up — routes admins vs clients
-// to the right place.
-router.get('/post-auth', function (req, res, next) {
-  if (!clerkAuth.isConfigured) return notConfigured(res);
+router.get('/forgot-password', authController.showForgotPassword);
+router.post('/forgot-password', authController.forgotPassword);
 
-  clerkAuth.getCurrentUser(req).then(function (user) {
-    if (!user) return res.redirect('/sign-in');
-    res.redirect(clerkAuth.isAdminUser(user) ? '/admin' : '/account');
-  }).catch(next);
-});
+router.get('/reset-password/:token', authController.showResetPassword);
+router.post('/reset-password/:token', authController.resetPassword);
 
 module.exports = router;

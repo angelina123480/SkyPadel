@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>My Account</h1>
+    <p>Welcome back, <%= currentUser.first_name %>.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 account-section">
+  <div class="container">
+
+    <% if (isAdmin) { %>
+    <div class="admin-banner admin-banner-success">
+      You're an admin. <a href="/admin">Go to the Admin Dashboard &rarr;</a>
+    </div>
+    <% } %>
+
+    <div class="admin-nav">
+      <a href="/account" class="active">Overview</a>
+      <a href="/orders">My Orders</a>
+      <a href="/account/profile">Profile</a>
+      <a href="/account/settings">Settings</a>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Total Orders</div><div class="stat-tile-value"><%= totalOrders %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Current Orders</div><div class="stat-tile-value"><%= currentOrders %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Completed Orders</div><div class="stat-tile-value accent"><%= completedOrders %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Total Spent</div><div class="stat-tile-value">$<%= totalSpent.toFixed(2) %></div></div></div>
+    </div>
+
+    <h3 style="margin-top: 20px;">Recent Orders</h3>
+    <% if (recentOrders.length === 0) { %>
+      <div class="empty-state">
+        <span class="glyphicon glyphicon-shopping-cart"></span>
+        <h3>No orders yet</h3>
+        <p>Once you place an order, it'll show up here.</p>
+        <a href="/shop" class="btn-sky btn-sky-yellow">Shop Bundles</a>
+      </div>
+    <% } else { %>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Date</th><th class="numeric">Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <% recentOrders.forEach(function(o) { %>
+          <tr>
+            <td><%= o.order_number %></td>
+            <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+            <td class="numeric">$<%= Number(o.total).toFixed(2) %></td>
+            <td><span class="status-badge status-<%= o.status %>"><%= o.status %></span></td>
+            <td><a href="/orders/<%= o.id %>" class="btn-sky btn-sky-outline-dark btn-sky-sm">View</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

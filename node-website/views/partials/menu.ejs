@@ -15,17 +15,18 @@
         <li id="news"><a href="/news">NEWS</a></li>
         <li id="about"><a href="/about">ABOUT US</a></li>
         <li id="contact"><a href="/contact">CONTACT US</a></li>
-        <% if (typeof clerkConfigured !== 'undefined' && clerkConfigured) { %>
-          <% if (isSignedIn) { %>
-          <li id="account"><a href="/account">MY ACCOUNT</a></li>
-          <% } else { %>
-          <li id="sign-in"><a href="/sign-in">SIGN IN</a></li>
-          <% } %>
+        <% if (isAdmin) { %>
+        <li id="admin"><a href="/admin">ADMIN</a></li>
+        <% } %>
+        <% if (isSignedIn) { %>
+        <li id="account"><a href="/account">MY ACCOUNT</a></li>
+        <% } else { %>
+        <li id="sign-in"><a href="/login">SIGN IN</a></li>
         <% } %>
         <li class="cart-item">
-          <a href="/shop" aria-label="Cart">
+          <a href="/cart" aria-label="Cart">
             <span class="glyphicon glyphicon-shopping-cart"></span>
-            <span class="cart-badge" id="cart-count">0</span>
+            <span class="cart-badge" id="cart-count"><%= typeof cartCount !== 'undefined' ? cartCount : 0 %></span>
           </a>
         </li>
       </ul>

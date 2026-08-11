@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../../partials/head %>
+</head>
+<body>
+<% include ../../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1><%= product ? 'Edit Product' : 'New Product' %></h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div id="product-form-banner"></div>
+
+    <% if (product && product.image_path) { %>
+      <img src="<%= product.image_path %>" class="product-form-image-preview" alt="Current image">
+    <% } %>
+
+    <form class="sky-form" id="product-form" data-mode="<%= product ? 'edit' : 'create' %>" data-id="<%= product ? product.id : '' %>" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="image">Product Image <%= product ? '(leave empty to keep current)' : '' %></label>
+        <input type="file" id="image" name="image" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+        <span class="field-error" data-error-for="image"></span>
+      </div>
+
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" class="form-control" value="<%= product ? product.name : '' %>" required>
+        <span class="field-error" data-error-for="name"></span>
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" class="form-control" rows="3" required><%= product ? product.description : '' %></textarea>
+        <span class="field-error" data-error-for="description"></span>
+      </div>
+
+      <div class="product-form-grid">
+        <div class="form-group">
+          <label for="cans">Number of Cans</label>
+          <input type="number" id="cans" name="cans" class="form-control" min="1" value="<%= product ? product.cans : '' %>" required>
+          <span class="field-error" data-error-for="cans"></span>
+        </div>
+        <div class="form-group">
+          <label for="ballsPerCan">Balls Per Can</label>
+          <input type="number" id="ballsPerCan" name="ballsPerCan" class="form-control" min="1" value="<%= product ? product.balls_per_can : 3 %>" required>
+          <span class="field-error" data-error-for="ballsPerCan"></span>
+        </div>
+        <div class="form-group">
+          <label for="price">Price ($)</label>
+          <input type="number" id="price" name="price" class="form-control" min="0" step="0.01" value="<%= product ? product.price : '' %>" required>
+          <span class="field-error" data-error-for="price"></span>
+        </div>
+        <div class="form-group">
+          <label for="compareAtPrice">Original Price ($) — optional, for discounts</label>
+          <input type="number" id="compareAtPrice" name="compareAtPrice" class="form-control" min="0" step="0.01" value="<%= product && product.compare_at_price ? product.compare_at_price : '' %>">
+          <span class="field-error" data-error-for="compareAtPrice"></span>
+        </div>
+        <div class="form-group">
+          <label for="stock">Stock Quantity</label>
+          <input type="number" id="stock" name="stock" class="form-control" min="0" value="<%= product ? product.stock : 0 %>" required>
+          <span class="field-error" data-error-for="stock"></span>
+        </div>
+        <div class="form-group">
+          <label for="badge">Badge — optional (e.g. "Most Popular")</label>
+          <input type="text" id="badge" name="badge" class="form-control" value="<%= product && product.badge ? product.badge : '' %>">
+        </div>
+        <div class="form-group">
+          <label for="brand">Brand</label>
+          <input type="text" id="brand" name="brand" class="form-control" value="<%= product ? product.brand : 'SkyPadel' %>">
+        </div>
+        <div class="form-group">
+          <label for="ballType">Ball Type</label>
+          <input type="text" id="ballType" name="ballType" class="form-control" value="<%= product ? product.ball_type : 'Padel' %>">
+        </div>
+        <div class="form-group">
+          <label for="durabilityRating">Durability</label>
+          <select id="durabilityRating" name="durabilityRating" class="form-control">
+            <% ['Low','Medium','High'].forEach(function(v) { %>
+            <option value="<%= v %>" <%= product && product.durability_rating === v ? 'selected' : '' %>><%= v %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="speedRating">Speed</label>
+          <select id="speedRating" name="speedRating" class="form-control">
+            <% ['Slow','Medium','Fast'].forEach(function(v) { %>
+            <option value="<%= v %>" <%= product && product.speed_rating === v ? 'selected' : '' %>><%= v %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="recommendedUse">Recommended Use</label>
+          <input type="text" id="recommendedUse" name="recommendedUse" class="form-control" value="<%= product ? product.recommended_use : 'Club play' %>">
+        </div>
+      </div>
+
+      <div class="shop-toolbar-checks" style="margin: 10px 0 26px; align-items:center;">
+        <label class="form-check-label"><input type="checkbox" name="isBestseller" <%= product && product.is_bestseller ? 'checked' : '' %>> Mark as bestseller</label>
+        <% if (product) { %>
+        <label class="form-check-label" style="flex-direction:column; align-items:flex-start; gap:4px;">
+          Status
+          <select name="isActive" class="form-control" style="height:36px;">
+            <option value="true" <%= product.is_active ? 'selected' : '' %>>Active (visible in shop)</option>
+            <option value="false" <%= !product.is_active ? 'selected' : '' %>>Unlisted</option>
+          </select>
+        </label>
+        <% } %>
+      </div>
+
+      <button type="submit" class="btn-sky btn-sky-yellow">Save Product</button>
+      <a href="/admin/products" class="btn-sky btn-sky-outline-dark">Cancel</a>
+    </form>
+  </div>
+</div>
+
+<% include ../../partials/footer %>
+</body>
+<% include ../../partials/script %>
+<script src="/javascripts/admin.js"></script>
+</html>

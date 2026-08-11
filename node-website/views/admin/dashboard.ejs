@@ -9,42 +9,88 @@
 <div class="page-hero page-hero-sm">
   <div class="container text-center">
     <h1>Admin Dashboard</h1>
-    <p>Signed in as <%= currentUserEmail %></p>
+    <p>Signed in as <%= currentUser.email %></p>
   </div>
 </div>
 
 <div class="container-fluid bg-3 admin-section">
   <div class="container">
-    <div class="row">
-      <div class="col-sm-4">
-        <div class="admin-card">
-          <span class="glyphicon glyphicon-shopping-cart admin-card-icon"></span>
-          <h3>Ball Bundles</h3>
-          <p>Add, edit and remove padel &amp; tennis ball bundles.</p>
-          <span class="admin-card-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="admin-card">
-          <span class="glyphicon glyphicon-list-alt admin-card-icon"></span>
-          <h3>News</h3>
-          <p>Write and publish SkyPadel Updates.</p>
-          <span class="admin-card-soon">Coming soon</span>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="admin-card">
-          <span class="glyphicon glyphicon-user admin-card-icon"></span>
-          <h3>Admins</h3>
-          <p>Invite or remove other admin accounts.</p>
-          <a href="/admin/admins" class="btn-sky btn-sky-outline-dark btn-sky-block">Manage Admins</a>
-        </div>
-      </div>
+    <div class="admin-nav">
+      <a href="/admin" class="active">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
     </div>
+
+    <% if (lowStockProducts.length > 0) { %>
+    <div class="admin-low-stock-banner">
+      <span class="glyphicon glyphicon-warning-sign"></span>
+      <%= lowStockProducts.length %> product<%= lowStockProducts.length === 1 ? '' : 's' %> running low on stock &mdash;
+      <a href="/admin/inventory">review inventory</a>
+    </div>
+    <% } %>
+
+    <div class="row admin-stat-row">
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Total Sales</div><div class="stat-tile-value accent">$<%= stats.totalSales.toFixed(2) %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Total Orders</div><div class="stat-tile-value"><%= stats.totalOrders %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Total Customers</div><div class="stat-tile-value"><%= stats.totalCustomers %></div></div></div>
+      <div class="col-sm-3"><div class="stat-tile"><div class="stat-tile-label">Products In Stock</div><div class="stat-tile-value"><%= productsInStock %> / <%= totalProducts %></div></div></div>
+    </div>
+
+    <div class="admin-chart-card">
+      <h3>Sales — Last 14 Days</h3>
+      <canvas id="sales-chart" height="90"></canvas>
+    </div>
+
+    <h3>Recent Orders</h3>
+    <% if (stats.recentOrders.length === 0) { %>
+      <p class="data-table-empty">No orders yet.</p>
+    <% } else { %>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th class="numeric">Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <% stats.recentOrders.forEach(function(o) { %>
+          <tr>
+            <td><%= o.order_number %></td>
+            <td><%= o.first_name %> <%= o.last_name %></td>
+            <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+            <td class="numeric">$<%= Number(o.total).toFixed(2) %></td>
+            <td><span class="status-badge status-<%= o.status %>"><%= o.status %></span></td>
+            <td><a href="/admin/orders/<%= o.id %>" class="btn-sky btn-sky-outline-dark btn-sky-sm">View</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
   </div>
 </div>
 
 <% include ../partials/footer %>
 </body>
 <% include ../partials/script %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+  var salesByDay = <%- JSON.stringify(stats.salesByDay) %>;
+  var ctx = document.getElementById('sales-chart');
+  if (ctx && window.Chart) {
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: salesByDay.map(function (d) { return d.day.slice(5); }),
+        datasets: [{
+          label: 'Sales ($)',
+          data: salesByDay.map(function (d) { return d.sales; }),
+          borderColor: '#0f9d78',
+          backgroundColor: 'rgba(15, 157, 120, 0.12)',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+  }
+</script>
 </html>

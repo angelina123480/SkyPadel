@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Profile</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 account-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/account">Overview</a>
+      <a href="/orders">My Orders</a>
+      <a href="/account/profile" class="active">Profile</a>
+      <a href="/account/settings">Settings</a>
+    </div>
+
+    <% if (updated) { %><div class="form-success-banner">Profile updated.</div><% } %>
+
+    <div class="sky-form-narrow" style="max-width: 560px; margin: 0;">
+      <form class="sky-form" method="POST" action="/account/profile">
+        <p class="account-profile-email"><%= currentUser.email %></p>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" class="form-control <%= errors.firstName ? 'has-error' : '' %>" value="<%= currentUser.first_name %>" required>
+              <% if (errors.firstName) { %><span class="field-error"><%= errors.firstName %></span><% } %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" class="form-control <%= errors.lastName ? 'has-error' : '' %>" value="<%= currentUser.last_name %>" required>
+              <% if (errors.lastName) { %><span class="field-error"><%= errors.lastName %></span><% } %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input type="text" id="phone" name="phone" class="form-control" value="<%= currentUser.phone || '' %>">
+        </div>
+
+        <h3 style="margin-top:30px;">Shipping Address</h3>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group"><label for="country">Country</label><input type="text" id="country" name="country" class="form-control" value="<%= address ? address.country : '' %>"></div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group"><label for="city">City</label><input type="text" id="city" name="city" class="form-control" value="<%= address ? address.city : '' %>"></div>
+          </div>
+        </div>
+        <div class="form-group"><label for="addressLine">Address</label><input type="text" id="addressLine" name="addressLine" class="form-control" value="<%= address ? address.address_line : '' %>"></div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group"><label for="apartment">Apartment / Building</label><input type="text" id="apartment" name="apartment" class="form-control" value="<%= address ? address.apartment : '' %>"></div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group"><label for="postalCode">Postal Code</label><input type="text" id="postalCode" name="postalCode" class="form-control" value="<%= address ? address.postal_code : '' %>"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-sky btn-sky-yellow">Save Changes</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

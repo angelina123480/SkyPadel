@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../../partials/head %>
+</head>
+<body>
+<% include ../../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Manage Orders</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders" class="active">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
+    </div>
+
+    <form class="admin-filters" method="GET" action="/admin/orders">
+      <div>
+        <label style="display:block; font-size:11px; text-transform:uppercase; color:var(--sky-text-light); margin-bottom:6px;">Search</label>
+        <input type="text" name="search" class="form-control" placeholder="Order #, name or email" value="<%= search %>">
+      </div>
+      <div>
+        <label style="display:block; font-size:11px; text-transform:uppercase; color:var(--sky-text-light); margin-bottom:6px;">Status</label>
+        <select name="status" class="form-control">
+          <option value="">All statuses</option>
+          <% statuses.forEach(function(s) { %>
+            <option value="<%= s %>" <%= currentStatus === s ? 'selected' : '' %>><%= s %></option>
+          <% }); %>
+        </select>
+      </div>
+      <button type="submit" class="btn-sky btn-sky-yellow btn-sky-sm">Filter</button>
+      <a href="/admin/orders" class="btn-sky btn-sky-outline-dark btn-sky-sm">Reset</a>
+    </form>
+
+    <% if (orders.length === 0) { %>
+      <p class="data-table-empty">No orders match those filters.</p>
+    <% } else { %>
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th class="numeric">Total</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          <% orders.forEach(function(o) { %>
+          <tr>
+            <td><%= o.order_number %></td>
+            <td><%= o.first_name %> <%= o.last_name %><br><small style="color:var(--sky-text-light);"><%= o.email %></small></td>
+            <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+            <td class="numeric">$<%= Number(o.total).toFixed(2) %></td>
+            <td><span class="status-badge status-<%= o.status %>"><%= o.status %></span></td>
+            <td><a href="/admin/orders/<%= o.id %>" class="btn-sky btn-sky-outline-dark btn-sky-sm">View</a></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<% include ../../partials/footer %>
+</body>
+<% include ../../partials/script %>
+</html>

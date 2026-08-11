@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Sign In</h1>
+    <p>Welcome back to SkyPadel.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 auth-section">
+  <div class="container">
+    <div class="sky-form-narrow">
+      <% if (typeof reset !== 'undefined' && reset) { %>
+        <div class="form-success-banner">Your password has been reset. Sign in with your new password.</div>
+      <% } %>
+      <% if (errors.form) { %><div class="form-error-banner"><%= errors.form %></div><% } %>
+      <form class="sky-form" method="POST" action="/login">
+        <input type="hidden" name="redirect" value="<%= redirectTo || '' %>">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control <%= errors.email ? 'has-error' : '' %>" value="<%= values.email || '' %>" required>
+          <% if (errors.email) { %><span class="field-error"><%= errors.email %></span><% } %>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control <%= errors.password ? 'has-error' : '' %>" required>
+          <% if (errors.password) { %><span class="field-error"><%= errors.password %></span><% } %>
+        </div>
+        <div class="form-group" style="display:flex; justify-content:space-between; align-items:center;">
+          <label class="form-check-label"><input type="checkbox" name="rememberMe"> Remember me</label>
+          <a href="/forgot-password" style="font-size:13px;">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block">Sign In</button>
+      </form>
+      <p class="sky-form-links">New to SkyPadel? <a href="/register">Create an account</a></p>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

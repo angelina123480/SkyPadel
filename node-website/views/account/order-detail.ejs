@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Order <%= order.order_number %></h1>
+    <p>Placed <%= new Date(order.created_at).toLocaleDateString() %></p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 account-section">
+  <div class="container">
+
+    <% if (justPlaced) { %>
+    <div class="order-confirmed-banner">
+      <span class="glyphicon glyphicon-ok-circle"></span>
+      <h2>Order Confirmed!</h2>
+      <p>Thanks, <%= order.first_name %> &mdash; a confirmation has been recorded on your account.</p>
+    </div>
+    <% } %>
+
+    <% if (order.status === 'cancelled') { %>
+      <div class="form-error-banner">This order was cancelled.</div>
+    <% } else { %>
+    <% var steps = ['confirmed','processing','shipped','delivered']; var stepIdx = steps.indexOf(order.status); %>
+    <div class="order-timeline">
+      <% steps.forEach(function(step, i) { %>
+      <div class="order-timeline-step <%= i <= stepIdx ? 'done' : '' %>">
+        <div class="order-timeline-dot">&#10003;</div>
+        <div class="order-timeline-label"><%= step.charAt(0).toUpperCase() + step.slice(1) %></div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>Product</th><th class="numeric">Qty</th><th class="numeric">Price</th><th class="numeric">Total</th></tr>
+            </thead>
+            <tbody>
+              <% order.items.forEach(function(item) { %>
+              <tr>
+                <td><% if (item.product_id) { %><a href="/shop/<%= item.product_slug %>"><%= item.product_name %></a><% } else { %><%= item.product_name %><% } %></td>
+                <td class="numeric"><%= item.quantity %></td>
+                <td class="numeric">$<%= Number(item.unit_price).toFixed(2) %></td>
+                <td class="numeric">$<%= Number(item.line_total).toFixed(2) %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="cart-summary" style="margin-bottom: 26px;">
+          <h3>Summary</h3>
+          <div class="cart-summary-row"><span>Subtotal</span><span>$<%= Number(order.subtotal).toFixed(2) %></span></div>
+          <div class="cart-summary-row discount"><span>Discount</span><span>&minus;$<%= Number(order.discount_total).toFixed(2) %></span></div>
+          <div class="cart-summary-row"><span>Shipping</span><span><%= Number(order.shipping_total) === 0 ? 'Free' : '$' + Number(order.shipping_total).toFixed(2) %></span></div>
+          <div class="cart-summary-total"><span>Total</span><span>$<%= Number(order.total).toFixed(2) %></span></div>
+          <span class="status-badge status-<%= order.status %>"><%= order.status %></span>
+        </div>
+        <div class="cart-summary">
+          <h3>Shipping To</h3>
+          <p><%= order.first_name %> <%= order.last_name %><br>
+          <%= order.address_line %><% if (order.apartment) { %>, <%= order.apartment %><% } %><br>
+          <%= order.city %>, <%= order.postal_code %><br>
+          <%= order.country %><br>
+          <%= order.phone %></p>
+          <p style="margin-top:14px; font-size:13px; color: var(--sky-text-light);">Paid with <%= order.card_brand %> ending in <%= order.card_last4 %></p>
+          <p style="font-size:13px; color: var(--sky-text-light);">Estimated delivery: <%= new Date(new Date(order.created_at).getTime() + 5*24*60*60*1000).toLocaleDateString() %></p>
+        </div>
+      </div>
+    </div>
+
+    <a href="/orders" class="admin-back-link">&larr; Back to My Orders</a>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

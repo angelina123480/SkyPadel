@@ -56,18 +56,20 @@
     <h2>Featured Bundles</h2>
     <p class="section-subtitle">A taste of what's in the shop.</p>
     <div class="row bundle-row">
-      <% featured.forEach(function(b) { %>
+      <% featured.forEach(function(p) { %>
       <div class="col-sm-4">
-        <div class="bundle-card bundle-card-dark <%= b.tag ? 'bundle-card-featured' : '' %>">
-          <% if (b.tag) { %><span class="bundle-tag"><%= b.tag %></span><% } %>
-          <div class="ball-graphic <%= b.id.indexOf('tennis') === 0 ? 'ball-tennis' : 'ball-padel' %>"></div>
-          <h3><%= b.name %></h3>
-          <p class="bundle-unit"><%- b.unitLabel %></p>
+        <div class="bundle-card bundle-card-dark <%= p.badge ? 'bundle-card-featured' : '' %>">
+          <% if (p.badge) { %><span class="bundle-tag"><%= p.badge %></span><% } %>
+          <a href="/shop/<%= p.slug %>"><img class="bundle-card-image" src="<%= p.image_path %>" alt="<%= p.name %>"></a>
+          <h3><a href="/shop/<%= p.slug %>" style="color:inherit;"><%= p.name %></a></h3>
+          <p class="bundle-unit"><%= p.cans %> cans &middot; <%= p.total_balls %> balls</p>
           <div class="bundle-price">
-            $<%= b.price.toFixed(2) %>
-            <span class="bundle-price-per">$<%= (b.price / b.balls).toFixed(2) %> / ball</span>
+            $<%= Number(p.price).toFixed(2) %>
+            <span class="bundle-price-per">$<%= (Number(p.price) / p.total_balls).toFixed(2) %> / ball</span>
           </div>
-          <button type="button" class="btn-sky btn-sky-block add-to-cart" data-bundle="<%= b.name %>">Add to Cart</button>
+          <button type="button" class="btn-sky btn-sky-block add-to-cart" data-product-id="<%= p.id %>" data-product-name="<%= p.name %>" <%= p.stock === 0 ? 'disabled' : '' %>>
+            <%= p.stock === 0 ? 'Sold Out' : 'Add to Cart' %>
+          </button>
         </div>
       </div>
       <% }); %>
@@ -75,6 +77,33 @@
     <a href="/shop" class="btn-sky btn-sky-outline-light btn-sky-lg featured-cta">View All Bundles</a>
   </div>
 </div>
+
+<% if (bestsellers.length) { %>
+<div class="container-fluid bg-3 shop-section">
+  <div class="container text-center">
+    <div class="shop-section-header">
+      <h2>Best Sellers</h2>
+      <p>The bundles players reorder the most.</p>
+    </div>
+    <div class="row bundle-row">
+      <% bestsellers.forEach(function(p) { %>
+      <div class="col-sm-4">
+        <div class="bundle-card">
+          <span class="bundle-tag">Best Seller</span>
+          <a href="/shop/<%= p.slug %>"><img class="bundle-card-image" src="<%= p.image_path %>" alt="<%= p.name %>"></a>
+          <h3><a href="/shop/<%= p.slug %>" style="color:inherit;"><%= p.name %></a></h3>
+          <p class="bundle-unit"><%= p.cans %> cans &middot; <%= p.total_balls %> balls</p>
+          <div class="bundle-price">$<%= Number(p.price).toFixed(2) %></div>
+          <button type="button" class="btn-sky btn-sky-yellow btn-sky-block add-to-cart" data-product-id="<%= p.id %>" data-product-name="<%= p.name %>" <%= p.stock === 0 ? 'disabled' : '' %>>
+            <%= p.stock === 0 ? 'Sold Out' : 'Add to Cart' %>
+          </button>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</div>
+<% } %>
 
 <div class="container-fluid bg-3 cta-strip">
   <div class="container text-center">

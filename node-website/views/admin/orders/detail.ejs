@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../../partials/head %>
+</head>
+<body>
+<% include ../../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Order <%= order.order_number %></h1>
+    <p><%= new Date(order.created_at).toLocaleDateString() %></p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div id="order-status-banner"></div>
+
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Product</th><th class="numeric">Qty</th><th class="numeric">Price</th><th class="numeric">Total</th></tr></thead>
+            <tbody>
+              <% order.items.forEach(function(item) { %>
+              <tr>
+                <td><%= item.product_name %></td>
+                <td class="numeric"><%= item.quantity %></td>
+                <td class="numeric">$<%= Number(item.unit_price).toFixed(2) %></td>
+                <td class="numeric">$<%= Number(item.line_total).toFixed(2) %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="checkout-card">
+          <h3>Customer Information</h3>
+          <p><strong><%= order.first_name %> <%= order.last_name %></strong><br>
+          <%= order.email %><br><%= order.phone %></p>
+          <h3 style="margin-top:24px;">Shipping Address</h3>
+          <p><%= order.address_line %><% if (order.apartment) { %>, <%= order.apartment %><% } %><br>
+          <%= order.city %>, <%= order.postal_code %><br><%= order.country %></p>
+        </div>
+      </div>
+
+      <div class="col-sm-4">
+        <div class="cart-summary" style="margin-bottom:26px;">
+          <h3>Summary</h3>
+          <div class="cart-summary-row"><span>Subtotal</span><span>$<%= Number(order.subtotal).toFixed(2) %></span></div>
+          <div class="cart-summary-row discount"><span>Discount</span><span>&minus;$<%= Number(order.discount_total).toFixed(2) %></span></div>
+          <div class="cart-summary-row"><span>Shipping</span><span>$<%= Number(order.shipping_total).toFixed(2) %></span></div>
+          <div class="cart-summary-total"><span>Total</span><span>$<%= Number(order.total).toFixed(2) %></span></div>
+          <p style="font-size:13px; color:var(--sky-text-light);">Paid with <%= order.card_brand %> ending in <%= order.card_last4 %></p>
+        </div>
+        <div class="cart-summary">
+          <h3>Order Status</h3>
+          <form id="order-status-form" data-id="<%= order.id %>">
+            <div class="form-group">
+              <select name="status" class="form-control">
+                <% statuses.forEach(function(s) { %>
+                <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+                <% }); %>
+              </select>
+            </div>
+            <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block">Update Status</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <a href="/admin/orders" class="admin-back-link">&larr; Back to Orders</a>
+  </div>
+</div>
+
+<% include ../../partials/footer %>
+</body>
+<% include ../../partials/script %>
+<script src="/javascripts/admin.js"></script>
+</html>

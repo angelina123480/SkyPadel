@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../../partials/head %>
+</head>
+<body>
+<% include ../../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Manage Products</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products" class="active">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
+    </div>
+
+    <% if (created) { %><div class="form-success-banner">Product saved.</div><% } %>
+    <div id="product-list-banner"></div>
+
+    <div class="admin-topbar">
+      <h3 style="margin:0;">All Products</h3>
+      <a href="/admin/products/new" class="btn-sky btn-sky-yellow">+ Add Product</a>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th></th><th>Name</th><th class="numeric">Price</th><th class="numeric">Stock</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody id="product-table-body">
+          <% products.forEach(function(p) { %>
+          <tr data-product-row="<%= p.id %>">
+            <td><img class="table-thumb" src="<%= p.image_path %>" alt="<%= p.name %>"></td>
+            <td><%= p.name %><% if (p.badge) { %> <span class="status-badge status-confirmed"><%= p.badge %></span><% } %></td>
+            <td class="numeric">$<%= Number(p.price).toFixed(2) %></td>
+            <td class="numeric"><%= p.stock %></td>
+            <td><span class="status-badge <%= p.is_active ? 'status-delivered' : 'status-cancelled' %>"><%= p.is_active ? 'Active' : 'Unlisted' %></span></td>
+            <td class="table-actions">
+              <a href="/admin/products/<%= p.id %>/edit" class="btn-sky btn-sky-outline-dark btn-sky-sm">Edit</a>
+              <button type="button" class="btn-sky btn-sky-outline-dark btn-sky-sm delete-product" data-id="<%= p.id %>">Delete</button>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% include ../../partials/footer %>
+</body>
+<% include ../../partials/script %>
+<script src="/javascripts/admin.js"></script>
+</html>

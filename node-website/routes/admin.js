@@ -1,54 +1,32 @@
-var express = require('express');
-var router = express.Router();
-var clerkAuth = require('../services/clerkAuth');
+const express = require('express');
+const router = express.Router();
+const { requireAdmin } = require('../middleware/auth');
+const { uploadProductImage } = require('../middleware/upload');
 
-router.use(clerkAuth.requireAdmin);
+const dashboardController = require('../controllers/admin/dashboardController');
+const productController = require('../controllers/admin/productController');
+const orderController = require('../controllers/admin/orderController');
+const customerController = require('../controllers/admin/customerController');
 
-router.get('/', function (req, res) {
-  res.render('admin/dashboard', {
-    page: 'Admin Dashboard',
-    menuId: '',
-    currentUser: req.currentUser,
-    currentUserEmail: clerkAuth.primaryEmail(req.currentUser)
-  });
-});
+router.use(requireAdmin);
 
-router.get('/admins', function (req, res, next) {
-  clerkAuth.listAdmins().then(function (admins) {
-    res.render('admin/admins', {
-      page: 'Manage Admins',
-      menuId: '',
-      currentUser: req.currentUser,
-      currentUserEmail: clerkAuth.primaryEmail(req.currentUser),
-      admins: admins,
-      invited: req.query.invited === '1',
-      removed: req.query.removed === '1',
-      error: req.query.error || null
-    });
-  }).catch(next);
-});
+router.get('/', dashboardController.index);
 
-router.post('/admins/invite', function (req, res, next) {
-  var email = (req.body.email || '').trim();
-  if (!email) return res.redirect('/admin/admins?error=' + encodeURIComponent('Enter an email address.'));
+router.get('/products', productController.list);
+router.get('/products/new', productController.showNew);
+router.post('/products', uploadProductImage.single('image'), productController.create);
+router.get('/products/:id/edit', productController.showEdit);
+router.put('/products/:id', uploadProductImage.single('image'), productController.update);
+router.delete('/products/:id', productController.remove);
 
-  var redirectUrl = req.protocol + '://' + req.get('host') + '/post-auth';
+router.get('/inventory', productController.inventory);
 
-  clerkAuth.inviteAdmin(email, redirectUrl).then(function () {
-    res.redirect('/admin/admins?invited=1');
-  }).catch(function (err) {
-    res.redirect('/admin/admins?error=' + encodeURIComponent(err.message || 'Could not send invite.'));
-  });
-});
+router.get('/orders', orderController.list);
+router.get('/orders/:id', orderController.detail);
+router.put('/orders/:id', orderController.updateStatus);
 
-router.post('/admins/:userId/remove', function (req, res, next) {
-  if (req.params.userId === req.currentUser.id) {
-    return res.redirect('/admin/admins?error=' + encodeURIComponent("You can't remove your own admin access."));
-  }
-
-  clerkAuth.removeAdmin(req.params.userId).then(function () {
-    res.redirect('/admin/admins?removed=1');
-  }).catch(next);
-});
+router.get('/customers', customerController.list);
+router.post('/customers/:id/promote', customerController.promote);
+router.post('/customers/:id/demote', customerController.demote);
 
 module.exports = router;

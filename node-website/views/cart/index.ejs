@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Your Cart</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 cart-section">
+  <div class="container">
+    <% if (items.length === 0) { %>
+      <div class="cart-empty">
+        <span class="glyphicon glyphicon-shopping-cart"></span>
+        <h3>Your cart is empty</h3>
+        <p>Browse the shop and add a bundle to get started.</p>
+        <a href="/shop" class="btn-sky btn-sky-yellow">Shop Bundles</a>
+      </div>
+    <% } else { %>
+    <div class="row">
+      <div class="col-sm-8">
+        <div class="cart-table-wrap" id="cart-lines">
+          <% items.forEach(function(item) { %>
+          <div class="cart-line" data-product-id="<%= item.product_id %>" data-unit-price="<%= item.price %>">
+            <img class="cart-line-image" src="<%= item.image_path %>" alt="<%= item.name %>">
+            <div class="cart-line-info">
+              <h4><a href="/shop/<%= item.slug %>" style="color:inherit;"><%= item.name %></a></h4>
+              <p><%= item.cans %> cans &middot; <%= item.total_balls %> balls &middot; $<%= Number(item.price).toFixed(2) %> each</p>
+            </div>
+            <div class="qty-selector cart-qty-selector">
+              <button type="button" class="qty-decrease">&minus;</button>
+              <input type="number" class="cart-qty-input" value="<%= item.quantity %>" min="1" max="<%= item.stock %>">
+              <button type="button" class="qty-increase">+</button>
+            </div>
+            <div class="cart-line-price">$<%= (Number(item.price) * item.quantity).toFixed(2) %></div>
+            <button type="button" class="cart-line-remove" aria-label="Remove"><span class="glyphicon glyphicon-trash"></span></button>
+          </div>
+          <% }); %>
+        </div>
+        <div class="cart-actions-row">
+          <a href="/shop" class="btn-sky btn-sky-outline-dark">&larr; Continue Shopping</a>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="cart-summary" id="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="cart-summary-row"><span>Subtotal</span><span id="summary-subtotal">$<%= totals.subtotal.toFixed(2) %></span></div>
+          <div class="cart-summary-row discount"><span>Discount</span><span id="summary-discount">&minus;$<%= totals.discountTotal.toFixed(2) %></span></div>
+          <div class="cart-summary-row"><span>Shipping</span><span id="summary-shipping"><%= totals.shippingTotal === 0 ? 'Free' : '$' + totals.shippingTotal.toFixed(2) %></span></div>
+          <div class="cart-summary-total"><span>Total</span><span id="summary-total">$<%= totals.total.toFixed(2) %></span></div>
+          <a href="/checkout" class="btn-sky btn-sky-yellow btn-sky-block">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

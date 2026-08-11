@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Checkout</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 checkout-section">
+  <div class="container">
+    <% if (errors.form) { %><div class="form-error-banner"><%= errors.form %></div><% } %>
+    <form class="sky-form" method="POST" action="/checkout" id="checkout-form">
+      <div class="row">
+        <div class="col-sm-7">
+
+          <div class="checkout-card">
+            <h3>Customer Information</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="firstName">First Name</label>
+                  <input type="text" id="firstName" name="firstName" class="form-control <%= errors.firstName ? 'has-error' : '' %>" value="<%= values.firstName || '' %>" required>
+                  <% if (errors.firstName) { %><span class="field-error"><%= errors.firstName %></span><% } %>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="lastName">Last Name</label>
+                  <input type="text" id="lastName" name="lastName" class="form-control <%= errors.lastName ? 'has-error' : '' %>" value="<%= values.lastName || '' %>" required>
+                  <% if (errors.lastName) { %><span class="field-error"><%= errors.lastName %></span><% } %>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" class="form-control <%= errors.email ? 'has-error' : '' %>" value="<%= values.email || '' %>" required>
+                  <% if (errors.email) { %><span class="field-error"><%= errors.email %></span><% } %>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input type="text" id="phone" name="phone" class="form-control <%= errors.phone ? 'has-error' : '' %>" value="<%= values.phone || '' %>" required>
+                  <% if (errors.phone) { %><span class="field-error"><%= errors.phone %></span><% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <h3>Shipping Address</h3>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="country">Country</label>
+                  <input type="text" id="country" name="country" class="form-control <%= errors.country ? 'has-error' : '' %>" value="<%= values.country || '' %>" required>
+                  <% if (errors.country) { %><span class="field-error"><%= errors.country %></span><% } %>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="city">City</label>
+                  <input type="text" id="city" name="city" class="form-control <%= errors.city ? 'has-error' : '' %>" value="<%= values.city || '' %>" required>
+                  <% if (errors.city) { %><span class="field-error"><%= errors.city %></span><% } %>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="addressLine">Address</label>
+              <input type="text" id="addressLine" name="addressLine" class="form-control <%= errors.addressLine ? 'has-error' : '' %>" value="<%= values.addressLine || '' %>" required>
+              <% if (errors.addressLine) { %><span class="field-error"><%= errors.addressLine %></span><% } %>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="apartment">Apartment / Building <span style="text-transform:none;">(optional)</span></label>
+                  <input type="text" id="apartment" name="apartment" class="form-control" value="<%= values.apartment || '' %>">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="postalCode">Postal Code</label>
+                  <input type="text" id="postalCode" name="postalCode" class="form-control <%= errors.postalCode ? 'has-error' : '' %>" value="<%= values.postalCode || '' %>" required>
+                  <% if (errors.postalCode) { %><span class="field-error"><%= errors.postalCode %></span><% } %>
+                </div>
+              </div>
+            </div>
+            <label class="form-check-label"><input type="checkbox" name="saveAddress" value="1"> Save this address to my profile</label>
+          </div>
+
+          <div class="checkout-card">
+            <h3>Payment</h3>
+            <div class="test-mode-banner"><span class="glyphicon glyphicon-info-sign"></span>Test Mode &mdash; no real charge will be made. Use any card-shaped number.</div>
+            <div class="form-group">
+              <label for="cardName">Cardholder Name</label>
+              <input type="text" id="cardName" name="cardName" class="form-control <%= errors.cardName ? 'has-error' : '' %>" value="<%= values.cardName || '' %>" required>
+              <% if (errors.cardName) { %><span class="field-error"><%= errors.cardName %></span><% } %>
+            </div>
+            <div class="form-group">
+              <label for="cardNumber">Card Number</label>
+              <input type="text" id="cardNumber" name="cardNumber" class="form-control card-number-input <%= errors.cardNumber ? 'has-error' : '' %>" placeholder="4242 4242 4242 4242" maxlength="23" value="<%= values.cardNumber || '' %>" required>
+              <% if (errors.cardNumber) { %><span class="field-error"><%= errors.cardNumber %></span><% } %>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="expiry">Expiry (MM/YY)</label>
+                  <input type="text" id="expiry" name="expiry" class="form-control <%= errors.expiry ? 'has-error' : '' %>" placeholder="MM/YY" maxlength="5" value="<%= values.expiry || '' %>" required>
+                  <% if (errors.expiry) { %><span class="field-error"><%= errors.expiry %></span><% } %>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="cvv">CVV</label>
+                  <input type="text" id="cvv" name="cvv" class="form-control <%= errors.cvv ? 'has-error' : '' %>" maxlength="4" required>
+                  <% if (errors.cvv) { %><span class="field-error"><%= errors.cvv %></span><% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-sm-5">
+          <div class="cart-summary">
+            <h3>Order Summary</h3>
+            <% items.forEach(function(item) { %>
+            <div class="cart-summary-row">
+              <span><%= item.name %> &times; <%= item.quantity %></span>
+              <span>$<%= (Number(item.price) * item.quantity).toFixed(2) %></span>
+            </div>
+            <% }); %>
+            <hr style="border-color:#eef1f2;">
+            <div class="cart-summary-row"><span>Subtotal</span><span>$<%= totals.subtotal.toFixed(2) %></span></div>
+            <div class="cart-summary-row discount"><span>Discount</span><span>&minus;$<%= totals.discountTotal.toFixed(2) %></span></div>
+            <div class="cart-summary-row"><span>Shipping</span><span><%= totals.shippingTotal === 0 ? 'Free' : '$' + totals.shippingTotal.toFixed(2) %></span></div>
+            <div class="cart-summary-total"><span>Total</span><span>$<%= totals.total.toFixed(2) %></span></div>
+            <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block">Place Order</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+<script src="/javascripts/checkout.js"></script>
+</html>

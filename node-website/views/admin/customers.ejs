@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Manage Customers</h1>
+    <p>Everyone with a SkyPadel account, and who has admin access.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers" class="active">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
+    </div>
+
+    <% if (promoted) { %><div class="admin-banner admin-banner-success">Admin access granted.</div><% } %>
+    <% if (demoted) { %><div class="admin-banner admin-banner-success">Admin access removed.</div><% } %>
+    <% if (error) { %><div class="admin-banner admin-banner-error"><%= error %></div><% } %>
+
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Role</th><th class="numeric">Orders</th><th class="numeric">Total Spent</th><th>Joined</th><th></th></tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(u) { %>
+          <tr>
+            <td><%= u.first_name %> <%= u.last_name %><% if (u.id === currentUser.id) { %> <span class="admin-you-tag">You</span><% } %></td>
+            <td><%= u.email %></td>
+            <td><span class="status-badge <%= u.role === 'admin' ? 'status-confirmed' : 'status-pending' %>"><%= u.role %></span></td>
+            <td class="numeric"><%= u.order_count %></td>
+            <td class="numeric">$<%= Number(u.total_spent).toFixed(2) %></td>
+            <td><%= new Date(u.created_at).toLocaleDateString() %></td>
+            <td>
+              <% if (u.id !== currentUser.id) { %>
+                <% if (u.role === 'admin') { %>
+                <form action="/admin/customers/<%= u.id %>/demote" method="post" onsubmit="return confirm('Remove admin access for <%= u.email %>?');">
+                  <button type="submit" class="btn-sky btn-sky-outline-dark btn-sky-sm">Remove Admin</button>
+                </form>
+                <% } else { %>
+                <form action="/admin/customers/<%= u.id %>/promote" method="post" onsubmit="return confirm('Make <%= u.email %> an admin?');">
+                  <button type="submit" class="btn-sky btn-sky-outline-dark btn-sky-sm">Make Admin</button>
+                </form>
+                <% } %>
+              <% } %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

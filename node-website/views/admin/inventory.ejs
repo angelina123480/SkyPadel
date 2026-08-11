@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Inventory</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory" class="active">Inventory</a>
+    </div>
+
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead><tr><th></th><th>Product</th><th class="numeric">Stock</th><th>Status</th></tr></thead>
+        <tbody>
+          <% products.filter(function(p){return p.is_active;}).forEach(function(p) { %>
+          <tr>
+            <td><img class="table-thumb" src="<%= p.image_path %>" alt="<%= p.name %>"></td>
+            <td><%= p.name %></td>
+            <td class="numeric"><%= p.stock %></td>
+            <td>
+              <% if (p.stock === 0) { %><span class="stock-pill out">Out of Stock</span>
+              <% } else if (p.stock <= 5) { %><span class="stock-pill low">Low Stock</span>
+              <% } else { %><span class="stock-pill ok">In Stock</span><% } %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

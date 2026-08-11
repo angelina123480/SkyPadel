@@ -1,16 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var clerkAuth = require('../services/clerkAuth');
+const express = require('express');
+const router = express.Router();
+const accountController = require('../controllers/accountController');
+const { requireAuth } = require('../middleware/auth');
 
-router.use(clerkAuth.requireSignedIn);
+router.use(requireAuth);
 
-router.get('/', function (req, res) {
-  res.render('account/index', {
-    page: 'My Account',
-    menuId: 'account',
-    currentUser: req.currentUser,
-    isAdmin: clerkAuth.isAdminUser(req.currentUser)
-  });
-});
+router.get('/', accountController.dashboard);
+router.get('/profile', accountController.showProfile);
+router.post('/profile', accountController.updateProfile);
+router.get('/settings', accountController.showSettings);
+router.post('/settings/password', accountController.updatePassword);
+router.post('/settings/notifications', accountController.updateNotifications);
 
 module.exports = router;

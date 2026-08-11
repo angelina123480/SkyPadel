@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Create Your Account</h1>
+    <p>Track orders, save your shipping details, and check out faster next time.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 auth-section">
+  <div class="container">
+    <div class="sky-form-narrow">
+      <% if (errors.form) { %><div class="form-error-banner"><%= errors.form %></div><% } %>
+      <form class="sky-form" method="POST" action="/register">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" class="form-control <%= errors.firstName ? 'has-error' : '' %>" value="<%= values.firstName || '' %>" required>
+              <% if (errors.firstName) { %><span class="field-error"><%= errors.firstName %></span><% } %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" class="form-control <%= errors.lastName ? 'has-error' : '' %>" value="<%= values.lastName || '' %>" required>
+              <% if (errors.lastName) { %><span class="field-error"><%= errors.lastName %></span><% } %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" class="form-control <%= errors.email ? 'has-error' : '' %>" value="<%= values.email || '' %>" required>
+          <% if (errors.email) { %><span class="field-error"><%= errors.email %></span><% } %>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" class="form-control <%= errors.password ? 'has-error' : '' %>" required minlength="8">
+          <% if (errors.password) { %><span class="field-error"><%= errors.password %></span><% } %>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control <%= errors.confirmPassword ? 'has-error' : '' %>" required minlength="8">
+          <% if (errors.confirmPassword) { %><span class="field-error"><%= errors.confirmPassword %></span><% } %>
+        </div>
+        <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block">Create Account</button>
+      </form>
+      <p class="sky-form-links">Already have an account? <a href="/login">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

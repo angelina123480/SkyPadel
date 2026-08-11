@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Settings</h1>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 account-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/account">Overview</a>
+      <a href="/orders">My Orders</a>
+      <a href="/account/profile">Profile</a>
+      <a href="/account/settings" class="active">Settings</a>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="checkout-card">
+          <h3>Change Password</h3>
+          <% if (passwordUpdated) { %><div class="form-success-banner">Password updated.</div><% } %>
+          <form class="sky-form" method="POST" action="/account/settings/password">
+            <div class="form-group">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" id="currentPassword" name="currentPassword" class="form-control <%= errors.currentPassword ? 'has-error' : '' %>" required>
+              <% if (errors.currentPassword) { %><span class="field-error"><%= errors.currentPassword %></span><% } %>
+            </div>
+            <div class="form-group">
+              <label for="newPassword">New Password</label>
+              <input type="password" id="newPassword" name="newPassword" class="form-control <%= errors.newPassword ? 'has-error' : '' %>" required minlength="8">
+              <% if (errors.newPassword) { %><span class="field-error"><%= errors.newPassword %></span><% } %>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword">Confirm New Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-control <%= errors.confirmPassword ? 'has-error' : '' %>" required minlength="8">
+              <% if (errors.confirmPassword) { %><span class="field-error"><%= errors.confirmPassword %></span><% } %>
+            </div>
+            <button type="submit" class="btn-sky btn-sky-yellow">Update Password</button>
+          </form>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="checkout-card">
+          <h3>Notification Preferences</h3>
+          <% if (notifyUpdated) { %><div class="form-success-banner">Preferences saved.</div><% } %>
+          <form class="sky-form" method="POST" action="/account/settings/notifications">
+            <label class="form-check-label" style="margin-bottom:20px;">
+              <input type="checkbox" name="notifyEmail" <%= currentUser.notify_email ? 'checked' : '' %>>
+              Email me about order status updates
+            </label>
+            <button type="submit" class="btn-sky btn-sky-outline-dark">Save Preferences</button>
+          </form>
+          <h3 style="margin-top:34px;">Session</h3>
+          <form method="POST" action="/logout">
+            <button type="submit" class="btn-sky btn-sky-outline-dark">Sign Out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

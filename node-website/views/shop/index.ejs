@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Shop SkyPadel Bundles</h1>
+    <p>One house brand, one padel ball, sold in the bundle size that fits how often you play.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 shop-section">
+  <div class="container">
+
+    <form class="shop-toolbar sky-form" method="GET" action="/shop">
+      <div class="shop-toolbar-row">
+        <div class="shop-toolbar-field" style="flex: 2;">
+          <label for="q">Search</label>
+          <input type="text" id="q" name="q" class="form-control" placeholder="Search bundles..." value="<%= filters.search %>">
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="minPrice">Min Price</label>
+          <input type="number" id="minPrice" name="minPrice" class="form-control" min="0" step="1" value="<%= filters.minPrice || '' %>">
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="maxPrice">Max Price</label>
+          <input type="number" id="maxPrice" name="maxPrice" class="form-control" min="0" step="1" value="<%= filters.maxPrice || '' %>">
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="minBalls">Bundle Size</label>
+          <select id="minBalls" name="minBalls" class="form-control">
+            <option value="">Any size</option>
+            <option value="6" <%= filters.minBalls == 6 ? 'selected' : '' %>>6+ balls</option>
+            <option value="18" <%= filters.minBalls == 18 ? 'selected' : '' %>>18+ balls</option>
+            <option value="36" <%= filters.minBalls == 36 ? 'selected' : '' %>>36+ balls</option>
+            <option value="54" <%= filters.minBalls == 54 ? 'selected' : '' %>>54+ balls</option>
+          </select>
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="brand">Brand</label>
+          <select id="brand" name="brand" class="form-control">
+            <option value="">All brands</option>
+            <% brands.forEach(function(b) { %>
+              <option value="<%= b %>" <%= filters.brand === b ? 'selected' : '' %>><%= b %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="speed">Speed</label>
+          <select id="speed" name="speed" class="form-control">
+            <option value="">Any speed</option>
+            <option value="Slow" <%= filters.speed === 'Slow' ? 'selected' : '' %>>Slow</option>
+            <option value="Medium" <%= filters.speed === 'Medium' ? 'selected' : '' %>>Medium</option>
+            <option value="Fast" <%= filters.speed === 'Fast' ? 'selected' : '' %>>Fast</option>
+          </select>
+        </div>
+        <div class="shop-toolbar-field">
+          <label for="sort">Sort By</label>
+          <select id="sort" name="sort" class="form-control">
+            <option value="recommended" <%= filters.sort === 'recommended' ? 'selected' : '' %>>Recommended</option>
+            <option value="price_asc" <%= filters.sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+            <option value="price_desc" <%= filters.sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+            <option value="bestselling" <%= filters.sort === 'bestselling' ? 'selected' : '' %>>Best Selling</option>
+            <option value="newest" <%= filters.sort === 'newest' ? 'selected' : '' %>>Newest</option>
+          </select>
+        </div>
+      </div>
+      <div class="shop-toolbar-checks">
+        <label class="form-check-label"><input type="checkbox" name="bestseller" value="1" <%= filters.bestsellerOnly ? 'checked' : '' %>> Best sellers only</label>
+        <label class="form-check-label"><input type="checkbox" name="inStock" value="1" <%= filters.inStockOnly ? 'checked' : '' %>> In stock only</label>
+        <button type="submit" class="btn-sky btn-sky-yellow btn-sky-sm">Apply Filters</button>
+        <a href="/shop" class="btn-sky btn-sky-outline-dark btn-sky-sm">Reset</a>
+      </div>
+    </form>
+
+    <p class="shop-result-count"><%= products.length %> bundle<%= products.length === 1 ? '' : 's' %> found<% if (priceRange.min) { %> &middot; from $<%= Number(priceRange.min).toFixed(2) %><% } %></p>
+
+    <% if (products.length === 0) { %>
+      <div class="shop-empty">
+        <span class="glyphicon glyphicon-search" style="font-size:36px; color: var(--sky-green); display:block; margin-bottom:16px;"></span>
+        <h3>No bundles match those filters</h3>
+        <p>Try widening your search or <a href="/shop">clearing all filters</a>.</p>
+      </div>
+    <% } else { %>
+    <div class="row bundle-row">
+      <% products.forEach(function(p) { %>
+      <div class="col-sm-4">
+        <div class="bundle-card <%= p.badge ? 'bundle-card-featured' : '' %>">
+          <% if (p.badge) { %><span class="bundle-tag"><%= p.badge %></span><% } %>
+          <% if (p.id === bestValueId) { %><span class="bundle-badge-best-value">Best Value</span><% } %>
+          <a href="/shop/<%= p.slug %>"><img class="bundle-card-image" src="<%= p.image_path %>" alt="<%= p.name %>"></a>
+          <h3><a href="/shop/<%= p.slug %>" style="color:inherit;"><%= p.name %></a></h3>
+          <p class="bundle-unit"><%= p.cans %> cans &middot; <%= p.total_balls %> balls</p>
+          <% if (p.review_count > 0) { %>
+          <div class="bundle-card-rating">
+            <span class="star-rating">
+              <% for (var s = 1; s <= 5; s++) { %><span class="<%= s <= Math.round(p.avg_rating) ? '' : 'star-empty' %>">&#9733;</span><% } %>
+            </span>
+            <span class="star-rating-value"><%= Number(p.avg_rating).toFixed(1) %> (<%= p.review_count %>)</span>
+          </div>
+          <% } %>
+          <div class="bundle-card-stock <%= p.stock === 0 ? 'out-of-stock' : (p.stock <= 5 ? 'low-stock' : 'in-stock') %>">
+            <%= p.stock === 0 ? 'Out of stock' : (p.stock <= 5 ? 'Only ' + p.stock + ' left' : 'In stock') %>
+          </div>
+          <div class="bundle-price">
+            <% if (p.compare_at_price) { %><span class="bundle-price-original">$<%= Number(p.compare_at_price).toFixed(2) %></span><% } %>
+            $<%= Number(p.price).toFixed(2) %>
+            <span class="bundle-price-per">$<%= (Number(p.price) / p.total_balls).toFixed(2) %> / ball</span>
+          </div>
+          <div class="bundle-card-actions">
+            <button type="button" class="btn-sky btn-sky-yellow add-to-cart" data-product-id="<%= p.id %>" data-product-name="<%= p.name %>" <%= p.stock === 0 ? 'disabled' : '' %>>
+              <%= p.stock === 0 ? 'Sold Out' : 'Add to Cart' %>
+            </button>
+            <a href="/shop/<%= p.slug %>" class="btn-sky btn-sky-outline-dark">Details</a>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <div class="comparison-table-wrap">
+      <h2 class="text-center" style="margin-bottom: 24px;">Compare Bundles</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Bundle</th>
+            <th>Balls</th>
+            <th>Price</th>
+            <th>Price / Ball</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(function(p) { %>
+          <tr class="<%= p.id === bestValueId ? 'best-value-row' : '' %>">
+            <td><a href="/shop/<%= p.slug %>"><%= p.name %></a><% if (p.id === bestValueId) { %> &middot; Best Value<% } %></td>
+            <td><%= p.total_balls %></td>
+            <td>$<%= Number(p.price).toFixed(2) %></td>
+            <td>$<%= (Number(p.price) / p.total_balls).toFixed(2) %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>
