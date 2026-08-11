@@ -67,7 +67,7 @@ async function removeItem(cartId, productId) {
 async function getItemsWithProducts(cartId) {
   if (!cartId) return [];
   const { rows } = await pool.query(
-    `SELECT ci.id AS item_id, ci.quantity, p.*
+    `SELECT ci.id AS item_id, ci.quantity, ci.product_id, p.*
      FROM cart_items ci JOIN products p ON p.id = ci.product_id
      WHERE ci.cart_id = $1 ORDER BY ci.id ASC`,
     [cartId]
