@@ -85,6 +85,8 @@
         }
         var unitPrice = Number(line.dataset.unitPrice);
         line.querySelector('.cart-line-price').textContent = '$' + (unitPrice * quantity).toFixed(2);
+      }).catch(function (err) {
+        if (window.SkyToast) window.SkyToast.show(err.message || 'Could not update quantity.');
       });
     });
 
@@ -93,12 +95,24 @@
       if (!removeBtn) return;
       var line = removeBtn.closest('.cart-line');
       var productId = Number(line.dataset.productId);
-      postJson('/cart/remove', 'DELETE', { productId: productId }).then(function (data) {
-        line.remove();
-        applyCartTotals(data);
-        setBadge(data.cartCount);
-        if (data.itemCount === 0) window.location.reload();
-      });
+      // productId is sent as a query param rather than a DELETE body — bodies on
+      // DELETE requests are unreliable across some browsers/proxies.
+      fetch('/cart/remove?productId=' + productId, { method: 'DELETE' })
+        .then(function (res) {
+          return res.json().then(function (data) {
+            if (!res.ok) throw new Error(data.error || 'Could not remove item.');
+            return data;
+          });
+        })
+        .then(function (data) {
+          line.remove();
+          applyCartTotals(data);
+          setBadge(data.cartCount);
+          if (data.itemCount === 0) window.location.reload();
+        })
+        .catch(function (err) {
+          if (window.SkyToast) window.SkyToast.show(err.message || 'Could not remove item.');
+        });
     });
   }
 
