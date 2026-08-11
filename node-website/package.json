@@ -1,0 +1,27 @@
+{
+  "name": "skypadel-ball-shop",
+  "version": "0.1.0",
+  "description": "SkyPadel — padel and tennis ball bundles storefront (front-end preview, no backend/database yet).",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "@clerk/clerk-js": "^6.25.8",
+    "@clerk/express": "^2.1.46",
+    "@portabletext/to-html": "^5.0.2",
+    "@sanity/client": "^7.25.0",
+    "@sanity/image-url": "^2.1.1",
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "dotenv": "^17.4.2",
+    "ejs": "2.5.7",
+    "express": "^4.22.2",
+    "jade": "~1.11.0",
+    "mongoose": "^9.8.0",
+    "morgan": "~1.8.1",
+    "rss-parser": "^3.13.0",
+    "serve-favicon": "~2.4.2"
+  }
+}

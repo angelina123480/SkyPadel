@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %>
+</head>
+<body>
+<% include partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <span class="news-category news-category-<%= post.category === 'tennis' ? 'tennis' : 'padel' %> post-category-badge"><%= post.category %></span>
+    <h1><%= post.title %></h1>
+    <% if (post.publishedAt) { %>
+    <p class="page-hero-meta">SkyPadel &middot; <%= post.publishedAt.toLocaleDateString('en-US', { dateStyle: 'medium' }) %></p>
+    <% } %>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 post-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <% if (post.image) { %>
+        <img src="<%= post.image %>" alt="" class="post-hero-image">
+        <% } %>
+        <div class="post-body">
+          <%- post.bodyHtml %>
+        </div>
+        <a href="/news" class="btn-sky btn-sky-outline-dark post-back-link">
+          <span class="glyphicon glyphicon-chevron-left"></span> Back to News
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include partials/footer %>
+</body>
+<% include partials/script %>
+</html>

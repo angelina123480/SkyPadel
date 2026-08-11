@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>My Account</h1>
+    <p><%= currentUser.firstName ? ('Welcome back, ' + currentUser.firstName + '.') : 'Welcome back.' %></p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 account-section">
+  <div class="container">
+
+    <% if (isAdmin) { %>
+    <div class="admin-banner admin-banner-success">
+      You're an admin. <a href="/admin">Go to the Admin Dashboard &rarr;</a>
+    </div>
+    <% } %>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <h3>Profile</h3>
+        <p class="account-profile-email"><%= currentUser.emailAddresses[0] && currentUser.emailAddresses[0].emailAddress %></p>
+        <button type="button" id="account-sign-out" class="btn-sky btn-sky-outline-dark">Sign Out</button>
+      </div>
+      <div class="col-sm-8">
+        <h3>Order History</h3>
+        <div class="news-empty">
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+          <h3>No orders yet</h3>
+          <p>Checkout is coming soon &mdash; once it's live, your past orders will show up here.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+<script src="/vendor/clerk-js/clerk.browser.js" data-clerk-publishable-key="<%= clerkPublishableKey %>"></script>
+<script>
+  window.addEventListener('load', function () {
+    var Clerk = window.Clerk;
+    Clerk.load().then(function () {
+      document.getElementById('account-sign-out').addEventListener('click', function () {
+        Clerk.signOut({ redirectUrl: '/' });
+      });
+    });
+  });
+</script>
+</html>

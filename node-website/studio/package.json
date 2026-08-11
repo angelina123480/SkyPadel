@@ -1,0 +1,19 @@
+{
+  "name": "skypadel-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sanity Studio for authoring SkyPadel Updates (padel & tennis news).",
+  "scripts": {
+    "dev": "sanity dev",
+    "start": "sanity start",
+    "build": "sanity build",
+    "deploy": "sanity deploy"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.6.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "sanity": "^6.6.0",
+    "styled-components": "^6.4.4"
+  }
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %>
+</head>
+<body>
+<% include partials/menu %>
+
+<div class="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="hero-eyebrow">One Brand. Every Bundle.</span>
+      <h1>Premium Padel &amp; Tennis Balls, <span class="hero-highlight">Delivered in Bulk</span></h1>
+      <p>SkyPadel balls are built for consistent bounce and durability, sold in tubes, match packs and club cases &mdash; so you're never digging around for a spare ball again.</p>
+      <div class="hero-actions">
+        <a href="/shop" class="btn-sky btn-sky-yellow btn-sky-lg">Shop Bundles</a>
+        <a href="/about" class="btn-sky btn-sky-outline btn-sky-lg">Our Story</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="ball-graphic ball-graphic-hero ball-padel"></div>
+      <div class="ball-graphic ball-graphic-hero ball-graphic-hero-2 ball-tennis"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 features-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 feature-item">
+        <span class="glyphicon glyphicon-ok-sign"></span>
+        <h4>Match Certified</h4>
+        <p>Built to official bounce and pressure standards for padel and tennis.</p>
+      </div>
+      <div class="col-sm-3 feature-item">
+        <span class="glyphicon glyphicon-refresh"></span>
+        <h4>Consistent Bounce</h4>
+        <p>Every tube, tested for the same feel from the first ball to the last.</p>
+      </div>
+      <div class="col-sm-3 feature-item">
+        <span class="glyphicon glyphicon-gift"></span>
+        <h4>Bulk Savings</h4>
+        <p>The bigger the bundle, the lower your price per ball.</p>
+      </div>
+      <div class="col-sm-3 feature-item">
+        <span class="glyphicon glyphicon-send"></span>
+        <h4>Fast Delivery</h4>
+        <p>Bundles packed and shipped quickly, straight to your club or door.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid bg-2 featured-section">
+  <div class="container text-center">
+    <h2>Featured Bundles</h2>
+    <p class="section-subtitle">A taste of what's in the shop.</p>
+    <div class="row bundle-row">
+      <% featured.forEach(function(b) { %>
+      <div class="col-sm-4">
+        <div class="bundle-card bundle-card-dark <%= b.tag ? 'bundle-card-featured' : '' %>">
+          <% if (b.tag) { %><span class="bundle-tag"><%= b.tag %></span><% } %>
+          <div class="ball-graphic <%= b.id.indexOf('tennis') === 0 ? 'ball-tennis' : 'ball-padel' %>"></div>
+          <h3><%= b.name %></h3>
+          <p class="bundle-unit"><%- b.unitLabel %></p>
+          <div class="bundle-price">
+            $<%= b.price.toFixed(2) %>
+            <span class="bundle-price-per">$<%= (b.price / b.balls).toFixed(2) %> / ball</span>
+          </div>
+          <button type="button" class="btn-sky btn-sky-block add-to-cart" data-bundle="<%= b.name %>">Add to Cart</button>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <a href="/shop" class="btn-sky btn-sky-outline-light btn-sky-lg featured-cta">View All Bundles</a>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 cta-strip">
+  <div class="container text-center">
+    <h2>Stock up once. Play all season.</h2>
+    <p>Club cases start at just a few dollars per ball.</p>
+    <a href="/shop" class="btn-sky btn-sky-yellow btn-sky-lg">Shop Bundles</a>
+  </div>
+</div>
+
+<% include partials/footer %>
+</body>
+<% include partials/script %>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Admin Dashboard</h1>
+    <p>Signed in as <%= currentUserEmail %></p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-4">
+        <div class="admin-card">
+          <span class="glyphicon glyphicon-shopping-cart admin-card-icon"></span>
+          <h3>Ball Bundles</h3>
+          <p>Add, edit and remove padel &amp; tennis ball bundles.</p>
+          <span class="admin-card-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="admin-card">
+          <span class="glyphicon glyphicon-list-alt admin-card-icon"></span>
+          <h3>News</h3>
+          <p>Write and publish SkyPadel Updates.</p>
+          <span class="admin-card-soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="admin-card">
+          <span class="glyphicon glyphicon-user admin-card-icon"></span>
+          <h3>Admins</h3>
+          <p>Invite or remove other admin accounts.</p>
+          <a href="/admin/admins" class="btn-sky btn-sky-outline-dark btn-sky-block">Manage Admins</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Sign In</h1>
+    <p>Access your SkyPadel account.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 auth-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <div id="clerk-sign-in" class="clerk-mount"></div>
+        <div id="clerk-sign-in-loading" class="auth-loading">Loading sign-in&hellip;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+<script src="/vendor/clerk-js/clerk.browser.js" data-clerk-publishable-key="<%= clerkPublishableKey %>"></script>
+<script>
+  window.addEventListener('load', function () {
+    var Clerk = window.Clerk;
+    Clerk.load().then(function () {
+      document.getElementById('clerk-sign-in-loading').style.display = 'none';
+      Clerk.mountSignIn(document.getElementById('clerk-sign-in'), {
+        routing: 'path',
+        path: '/sign-in',
+        signUpUrl: '/sign-up',
+        fallbackRedirectUrl: '/post-auth'
+      });
+    });
+  });
+</script>
+</html>

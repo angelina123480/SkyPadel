@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %>
+</head>
+<body>
+<% include partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Padel &amp; Tennis News</h1>
+    <p>SkyPadel updates and real headlines from around the web, in one place.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 news-section">
+  <div class="container">
+
+    <% if (updates && updates.length > 0) { %>
+    <div class="shop-section-header">
+      <h2>SkyPadel Updates</h2>
+      <p>News and announcements straight from the SkyPadel team.</p>
+    </div>
+    <div class="row news-grid">
+      <% updates.forEach(function(u) { %>
+      <div class="col-sm-6 col-md-4 news-col" data-category="<%= u.category === 'tennis' ? 'tennis' : 'padel' %>">
+        <div class="news-card">
+          <div class="news-card-cover news-card-cover-<%= u.category === 'tennis' ? 'tennis' : 'padel' %>">
+            <div class="ball-graphic <%= u.category === 'tennis' ? 'ball-tennis' : 'ball-padel' %> news-card-cover-ball"></div>
+            <% if (u.image) { %>
+            <img src="<%= u.image %>" alt="" class="news-card-cover-img" loading="lazy" onerror="this.style.display='none'">
+            <% } %>
+          </div>
+          <div class="news-card-body">
+            <span class="news-category news-category-<%= u.category === 'tennis' ? 'tennis' : 'padel' %>"><%= u.category %></span>
+            <% if (u.publishedAt) { %>
+            <span class="news-date"><%= u.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %></span>
+            <% } %>
+            <h3><%= u.title %></h3>
+            <% if (u.excerpt) { %>
+            <p class="news-snippet"><%= u.excerpt %></p>
+            <% } %>
+            <div class="news-card-footer">
+              <span class="news-source-name">SkyPadel</span>
+              <a href="/news/updates/<%= u.slug %>" class="news-read-more">
+                Read More <span class="glyphicon glyphicon-chevron-right"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+
+    <% if (newsItems.length === 0) { %>
+    <div class="news-empty">
+      <span class="glyphicon glyphicon-refresh"></span>
+      <h3>Live headlines are loading</h3>
+      <p>We couldn't reach the news sources just now. Check back shortly.</p>
+    </div>
+    <% } else { %>
+
+    <div class="shop-section-header <%= (updates && updates.length > 0) ? 'shop-section-header-spaced' : '' %>">
+      <h2>Around the Web</h2>
+      <p>
+        Real headlines from The Guardian, BBC Sport and ESPN.
+        <% if (lastUpdated) { %>
+          <br><span class="page-hero-meta page-hero-meta-dark">Last updated <%= lastUpdated.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) %></span>
+        <% } %>
+      </p>
+    </div>
+
+    <div class="news-tabs" role="tablist">
+      <button type="button" class="news-tab active" data-filter="all">All</button>
+      <button type="button" class="news-tab" data-filter="padel">Padel</button>
+      <button type="button" class="news-tab" data-filter="tennis">Tennis</button>
+    </div>
+
+    <div class="row news-grid news-grid-external">
+      <% newsItems.forEach(function(n) { %>
+      <div class="col-sm-6 col-md-4 news-col" data-category="<%= n.category %>">
+        <div class="news-card">
+          <div class="news-card-cover news-card-cover-<%= n.category %>">
+            <div class="ball-graphic <%= n.category === 'padel' ? 'ball-padel' : 'ball-tennis' %> news-card-cover-ball"></div>
+            <% if (n.image) { %>
+            <img src="<%= n.image %>" alt="" class="news-card-cover-img" loading="lazy" onerror="this.style.display='none'">
+            <% } %>
+          </div>
+          <div class="news-card-body">
+            <span class="news-category news-category-<%= n.category %>"><%= n.category %></span>
+            <span class="news-date"><%= n.publishedAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) %></span>
+            <h3><%= n.title %></h3>
+            <% if (n.snippet) { %>
+            <p class="news-snippet"><%= n.snippet %></p>
+            <% } %>
+            <div class="news-card-footer">
+              <span class="news-source-name"><%= n.source %></span>
+              <a href="<%= n.link %>" class="news-read-more" target="_blank" rel="noopener noreferrer">
+                Full Story <span class="glyphicon glyphicon-new-window"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+    <div class="shop-note">
+      <span class="glyphicon glyphicon-info-sign"></span>
+      Headlines and summaries are pulled directly from each publisher and refresh automatically once a day.
+    </div>
+
+    <% } %>
+  </div>
+</div>
+
+<% include partials/footer %>
+</body>
+<% include partials/script %>
+</html>

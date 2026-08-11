@@ -1,0 +1,9 @@
+node_modules/
+.env
+.env.local
+npm-debug.log*
+
+# Sanity Studio
+studio/node_modules/
+studio/dist/
+studio/.sanity/

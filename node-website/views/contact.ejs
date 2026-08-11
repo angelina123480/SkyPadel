@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include partials/head %>
+</head>
+<body>
+<% include partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Contact Us</h1>
+    <p>Questions about bundles, bulk orders or club pricing? Send us a message.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 contact-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-5 contact-info">
+        <h2>Get In Touch</h2>
+        <p class="contact-placeholder-note">Contact details below are placeholders &mdash; swap in your real details when ready.</p>
+        <ul class="contact-list">
+          <li><span class="glyphicon glyphicon-envelope"></span> hello@skypadel.com</li>
+          <li><span class="glyphicon glyphicon-earphone"></span> +1 (555) 123-4567</li>
+          <li><span class="glyphicon glyphicon-map-marker"></span> Club &amp; bulk orders welcome, worldwide shipping</li>
+        </ul>
+        <div class="social-row social-row-dark">
+          <a href="#" aria-label="Instagram"><span class="glyphicon glyphicon-camera"></span></a>
+          <a href="#" aria-label="Facebook"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+          <a href="#" aria-label="Email"><span class="glyphicon glyphicon-envelope"></span></a>
+        </div>
+      </div>
+      <div class="col-sm-7">
+        <form id="contact-form" class="contact-form">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" placeholder="Bundle question, bulk order, etc.">
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea class="form-control" id="message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+          </div>
+          <button type="submit" class="btn-sky btn-sky-yellow btn-sky-lg">Send Message</button>
+          <p id="contact-success" class="contact-success">Thanks! This form is a preview &mdash; message sending goes live soon.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include partials/footer %>
+</body>
+<% include partials/script %>
+</html>
