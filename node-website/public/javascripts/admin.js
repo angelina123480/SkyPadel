@@ -82,4 +82,54 @@
   }
 
   // --- Promote/demote/delete confirms already use native confirm() via inline onsubmit ---
+
+  // --- Delivery zones: map shapes + list switches stay in sync ---
+  var zoneMap = document.querySelector('.zone-map');
+  if (zoneMap) {
+    function setZoneUI(id, enabled) {
+      var shape = zoneMap.querySelector('[data-zone-id="' + id + '"]');
+      if (shape) {
+        shape.classList.toggle('zone-on', enabled);
+        shape.classList.toggle('zone-off', !enabled);
+      }
+      var input = document.querySelector('.zone-toggle-input[data-zone-id="' + id + '"]');
+      if (input) input.checked = enabled;
+    }
+
+    function toggleZone(id, enabled) {
+      fetch('/admin/delivery-zones/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled: enabled })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) {
+            showBanner('zone-banner', data.error || 'Could not update that zone.', true);
+            setZoneUI(id, !enabled); // revert
+            return;
+          }
+          setZoneUI(id, data.zone.enabled);
+        })
+        .catch(function () {
+          showBanner('zone-banner', 'Could not update that zone.', true);
+          setZoneUI(id, !enabled); // revert
+        });
+    }
+
+    zoneMap.addEventListener('click', function (e) {
+      var shape = e.target.closest('.zone-shape');
+      if (!shape) return;
+      var id = shape.dataset.zoneId;
+      var enabled = !shape.classList.contains('zone-on');
+      setZoneUI(id, enabled); // optimistic
+      toggleZone(id, enabled);
+    });
+
+    document.querySelectorAll('.zone-toggle-input').forEach(function (input) {
+      input.addEventListener('change', function () {
+        toggleZone(input.dataset.zoneId, input.checked);
+      });
+    });
+  }
 })();

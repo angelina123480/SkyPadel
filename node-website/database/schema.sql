@@ -127,6 +127,20 @@ CREATE TABLE IF NOT EXISTS reviews (
   UNIQUE (product_id, user_id)
 );
 
+CREATE TABLE IF NOT EXISTS delivery_zones (
+  id             SERIAL PRIMARY KEY,
+  name           VARCHAR(80) NOT NULL UNIQUE,
+  enabled        BOOLEAN NOT NULL DEFAULT true,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Lebanon's 8 governorates. Seeded enabled by default so checkout keeps working
+-- immediately; admin can then restrict delivery from /admin/delivery-zones.
+INSERT INTO delivery_zones (name) VALUES
+  ('Beirut'), ('Mount Lebanon'), ('North Lebanon'), ('Akkar'),
+  ('Beqaa'), ('Baalbek-Hermel'), ('South Lebanon'), ('Nabatieh')
+ON CONFLICT (name) DO NOTHING;
+
 CREATE INDEX IF NOT EXISTS idx_cart_items_cart ON cart_items(cart_id);
 CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);

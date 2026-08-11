@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <% include ../partials/head %>
+</head>
+<body>
+<% include ../partials/menu %>
+
+<div class="page-hero page-hero-sm">
+  <div class="container text-center">
+    <h1>Delivery Zones</h1>
+    <p>Choose which Lebanese governorates SkyPadel currently delivers to. Checkout only accepts addresses in enabled zones.</p>
+  </div>
+</div>
+
+<div class="container-fluid bg-3 admin-section">
+  <div class="container">
+    <div class="admin-nav">
+      <a href="/admin">Dashboard</a>
+      <a href="/admin/products">Products</a>
+      <a href="/admin/orders">Orders</a>
+      <a href="/admin/customers">Customers</a>
+      <a href="/admin/inventory">Inventory</a>
+      <a href="/admin/delivery-zones" class="active">Delivery Zones</a>
+    </div>
+
+    <div id="zone-banner"></div>
+
+    <% var zoneByName = {}; zones.forEach(function (z) { zoneByName[z.name] = z; }); %>
+    <div class="row">
+      <div class="col-sm-7">
+        <div class="zone-map-card">
+          <svg viewBox="0 0 320 500" class="zone-map" role="img" aria-label="Map of Lebanon's governorates">
+            <polygon class="zone-shape <%= zoneByName['Akkar'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Akkar'].id %>" points="80,20 260,20 250,90 90,90"></polygon>
+            <polygon class="zone-shape <%= zoneByName['North Lebanon'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['North Lebanon'].id %>" points="90,90 190,90 185,190 75,190"></polygon>
+            <polygon class="zone-shape <%= zoneByName['Baalbek-Hermel'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Baalbek-Hermel'].id %>" points="190,90 250,90 275,230 185,190"></polygon>
+            <polygon class="zone-shape <%= zoneByName['Mount Lebanon'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Mount Lebanon'].id %>" points="75,190 185,190 195,340 70,335"></polygon>
+            <polygon class="zone-shape <%= zoneByName['Beqaa'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Beqaa'].id %>" points="185,190 275,230 280,370 195,340"></polygon>
+            <polygon class="zone-shape <%= zoneByName['South Lebanon'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['South Lebanon'].id %>" points="70,335 195,340 185,430 75,425"></polygon>
+            <polygon class="zone-shape <%= zoneByName['Nabatieh'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Nabatieh'].id %>" points="195,340 280,370 270,460 185,430"></polygon>
+
+            <text x="165" y="60" class="zone-label">Akkar</text>
+            <text x="128" y="145" class="zone-label">North<tspan x="128" dy="14">Lebanon</tspan></text>
+            <text x="222" y="150" class="zone-label">Baalbek-<tspan x="222" dy="14">Hermel</tspan></text>
+            <text x="128" y="270" class="zone-label">Mount<tspan x="128" dy="14">Lebanon</tspan></text>
+            <text x="228" y="285" class="zone-label">Beqaa</text>
+            <text x="118" y="385" class="zone-label">South<tspan x="118" dy="14">Lebanon</tspan></text>
+            <text x="222" y="405" class="zone-label">Nabatieh</text>
+
+            <line x1="25" y1="265" x2="58" y2="265" class="zone-leader"></line>
+            <circle class="zone-shape zone-shape-circle <%= zoneByName['Beirut'].enabled ? 'zone-on' : 'zone-off' %>" data-zone-id="<%= zoneByName['Beirut'].id %>" cx="65" cy="265" r="9"></circle>
+            <text x="18" y="255" class="zone-label">Beirut</text>
+          </svg>
+          <p class="zone-map-hint">Click a region to toggle it on or off.</p>
+        </div>
+      </div>
+
+      <div class="col-sm-5">
+        <div class="zone-list-card">
+          <h3>Governorates</h3>
+          <ul class="zone-list">
+            <% zones.forEach(function (z) { %>
+            <li class="zone-list-item">
+              <span><%= z.name %></span>
+              <label class="zone-switch">
+                <input type="checkbox" class="zone-toggle-input" data-zone-id="<%= z.id %>" <%= z.enabled ? 'checked' : '' %>>
+                <span class="zone-switch-track"></span>
+              </label>
+            </li>
+            <% }); %>
+          </ul>
+          <p class="admin-empty-note">Checkout's country is always locked to Lebanon; the city field only offers governorates enabled here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include ../partials/footer %>
+</body>
+<% include ../partials/script %>
+<script src="/javascripts/admin.js"></script>
+</html>

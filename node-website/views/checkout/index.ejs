@@ -57,18 +57,26 @@
 
           <div class="checkout-card">
             <h3>Shipping Address</h3>
+            <% if (enabledZones.length === 0) { %>
+            <div class="form-error-banner">SkyPadel isn't currently delivering to any area — please check back soon.</div>
+            <% } %>
             <div class="row">
               <div class="col-sm-6">
                 <div class="form-group">
                   <label for="country">Country</label>
-                  <input type="text" id="country" name="country" class="form-control <%= errors.country ? 'has-error' : '' %>" value="<%= values.country || '' %>" required>
-                  <% if (errors.country) { %><span class="field-error"><%= errors.country %></span><% } %>
+                  <input type="text" id="country" class="form-control" value="<%= country %>" disabled>
+                  <input type="hidden" name="country" value="<%= country %>">
                 </div>
               </div>
               <div class="col-sm-6">
                 <div class="form-group">
-                  <label for="city">City</label>
-                  <input type="text" id="city" name="city" class="form-control <%= errors.city ? 'has-error' : '' %>" value="<%= values.city || '' %>" required>
+                  <label for="city">Governorate</label>
+                  <select id="city" name="city" class="form-control <%= errors.city ? 'has-error' : '' %>" required <%= enabledZones.length === 0 ? 'disabled' : '' %>>
+                    <option value="">Select a governorate</option>
+                    <% enabledZones.forEach(function(zone) { %>
+                    <option value="<%= zone %>" <%= values.city === zone ? 'selected' : '' %>><%= zone %></option>
+                    <% }); %>
+                  </select>
                   <% if (errors.city) { %><span class="field-error"><%= errors.city %></span><% } %>
                 </div>
               </div>
@@ -143,7 +151,7 @@
             <div class="cart-summary-row discount"><span>Discount</span><span>&minus;$<%= totals.discountTotal.toFixed(2) %></span></div>
             <div class="cart-summary-row"><span>Shipping</span><span><%= totals.shippingTotal === 0 ? 'Free' : '$' + totals.shippingTotal.toFixed(2) %></span></div>
             <div class="cart-summary-total"><span>Total</span><span>$<%= totals.total.toFixed(2) %></span></div>
-            <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block">Place Order</button>
+            <button type="submit" class="btn-sky btn-sky-yellow btn-sky-block" <%= enabledZones.length === 0 ? 'disabled' : '' %>>Place Order</button>
           </div>
         </div>
       </div>

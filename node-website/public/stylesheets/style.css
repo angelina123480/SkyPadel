@@ -1030,6 +1030,36 @@ a { transition: color .15s ease; }
 .admin-empty-note { color: var(--sky-text-light); font-size: 13px; margin-top: -14px; margin-bottom: 20px; }
 
 /* ==========================================================================
+   Delivery zones map
+   ========================================================================== */
+.zone-map-card, .zone-list-card {
+  background: var(--sky-white);
+  border-radius: var(--sky-radius);
+  box-shadow: var(--sky-shadow);
+  padding: 26px;
+  margin-bottom: 26px;
+}
+.zone-map { width: 100%; height: auto; max-height: 520px; }
+.zone-shape { fill: #dde2e6; stroke: var(--sky-white); stroke-width: 3; cursor: pointer; transition: fill .15s ease; }
+.zone-shape.zone-on { fill: var(--sky-green); }
+.zone-shape.zone-off { fill: #c7cdd1; }
+.zone-shape:hover { fill: var(--sky-yellow-dark); }
+.zone-shape-circle { stroke-width: 2; }
+.zone-leader { stroke: #c7cdd1; stroke-width: 1.5; }
+.zone-label { font-family: 'Poppins', Arial, sans-serif; font-size: 12px; font-weight: 700; fill: var(--sky-navy); text-anchor: middle; pointer-events: none; text-shadow: 0 1px 2px rgba(255,255,255,0.7); }
+.zone-map-hint { text-align: center; color: var(--sky-text-light); font-size: 13px; margin: 16px 0 0; }
+
+.zone-list { list-style: none; padding: 0; margin: 0 0 20px; }
+.zone-list-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eef1f2; font-size: 14px; }
+.zone-list-item:last-child { border-bottom: 0; }
+.zone-switch { position: relative; display: inline-block; width: 42px; height: 24px; }
+.zone-switch input { opacity: 0; width: 0; height: 0; }
+.zone-switch-track { position: absolute; inset: 0; background: #c7cdd1; border-radius: 24px; cursor: pointer; transition: background .15s ease; }
+.zone-switch-track::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform .15s ease; }
+.zone-switch input:checked + .zone-switch-track { background: var(--sky-green); }
+.zone-switch input:checked + .zone-switch-track::before { transform: translateX(18px); }
+
+/* ==========================================================================
    Empty state (shared)
    ========================================================================== */
 .empty-state { text-align: center; max-width: 460px; margin: 0 auto; padding: 50px 0; }
