@@ -5,12 +5,17 @@ CREATE TABLE IF NOT EXISTS users (
   first_name     VARCHAR(80) NOT NULL,
   last_name      VARCHAR(80) NOT NULL,
   email          VARCHAR(255) NOT NULL UNIQUE,
-  password_hash  VARCHAR(255) NOT NULL,
+  password_hash  VARCHAR(255),
+  google_id      VARCHAR(255) UNIQUE,
   role           VARCHAR(20) NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'admin')),
   phone          VARCHAR(40),
   notify_email   BOOLEAN NOT NULL DEFAULT true,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+-- Migrations for databases created before Google sign-in was added (safe to re-run).
+ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL;
+ALTER TABLE users ADD COLUMN IF NOT EXISTS google_id VARCHAR(255) UNIQUE;
 
 CREATE TABLE IF NOT EXISTS addresses (
   id             SERIAL PRIMARY KEY,

@@ -67,6 +67,7 @@ function showSettings(req, res) {
     page: 'Settings',
     menuId: 'account',
     errors: {},
+    hasPassword: Boolean(req.currentUser.password_hash),
     passwordUpdated: req.query.passwordUpdated === '1',
     notifyUpdated: req.query.notifyUpdated === '1'
   });
@@ -75,13 +76,18 @@ function showSettings(req, res) {
 async function updatePassword(req, res, next) {
   try {
     const errors = {};
-    const match = await bcrypt.compare(req.body.currentPassword || '', req.currentUser.password_hash);
-    if (!match) errors.currentPassword = 'Current password is incorrect.';
+    const hasPassword = Boolean(req.currentUser.password_hash);
+    if (hasPassword) {
+      const match = await bcrypt.compare(req.body.currentPassword || '', req.currentUser.password_hash);
+      if (!match) errors.currentPassword = 'Current password is incorrect.';
+    }
     if (!minLength(req.body.newPassword, 8)) errors.newPassword = 'New password must be at least 8 characters.';
     if (req.body.newPassword !== req.body.confirmPassword) errors.confirmPassword = 'Passwords do not match.';
 
     if (Object.keys(errors).length) {
-      return res.status(400).render('account/settings', { page: 'Settings', menuId: 'account', errors, passwordUpdated: false, notifyUpdated: false });
+      return res.status(400).render('account/settings', {
+        page: 'Settings', menuId: 'account', errors, hasPassword, passwordUpdated: false, notifyUpdated: false
+      });
     }
 
     const passwordHash = await bcrypt.hash(req.body.newPassword, 10);

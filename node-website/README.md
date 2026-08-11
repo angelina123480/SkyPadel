@@ -78,6 +78,18 @@ The app runs as a Vercel Serverless Function: `api/index.js` exports the same Ex
 
 Checkout runs in **test mode only** — clearly labeled on the checkout page. It validates card format (number length, expiry, CVV) but never stores a full card number, only the last 4 digits and a guessed brand. No real charge is ever made. Swapping in a real processor (e.g. Stripe) would mean replacing the validation in `middleware/validate.js` and the order-creation call in `controllers/checkoutController.js` with a real payment intent — the rest of the checkout/order flow doesn't need to change.
 
+## Sign in with Google (optional)
+
+Without it configured, the "Continue with Google" button is simply hidden on the login/register pages — email/password accounts work either way.
+
+1. Create (or reuse) a project at [console.cloud.google.com](https://console.cloud.google.com).
+2. **APIs & Services → OAuth consent screen** — set User Type to "External," fill in an app name and your email, and add your own Google account under **Test users** (while the app is unverified/in Testing, only listed test users can sign in — fine for development, submit for verification later if you need the public to sign in).
+3. **APIs & Services → Credentials → Create Credentials → OAuth client ID**, type "Web application."
+4. Under **Authorized redirect URIs**, add `<your-site-url>/auth/google/callback` for every URL you'll run the app on (e.g. both `http://localhost:3001/auth/google/callback` and your production URL).
+5. Copy the Client ID and Client Secret into `.env` as `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` (and the same into your Vercel project's environment variables for production).
+
+Accounts link by verified email: signing in with Google using an email that already has a password account attaches your Google ID to that same account rather than creating a duplicate. Google-only accounts have no password until one is set from Account → Settings.
+
 ## Password reset emails (optional)
 
 Without SMTP configured, forgot-password links are shown directly on the page and logged to the console instead of emailed, so the flow still works end-to-end locally. To send real emails, set `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` and `SMTP_FROM` in `.env`.

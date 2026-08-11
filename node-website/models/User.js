@@ -14,6 +14,25 @@ async function findByEmail(email) {
   return rows[0] || null;
 }
 
+async function findByGoogleId(googleId) {
+  const { rows } = await pool.query('SELECT * FROM users WHERE google_id = $1', [googleId]);
+  return rows[0] || null;
+}
+
+async function createFromGoogle({ firstName, lastName, email, googleId, role = 'customer' }) {
+  const { rows } = await pool.query(
+    `INSERT INTO users (first_name, last_name, email, password_hash, google_id, role)
+     VALUES ($1, $2, $3, NULL, $4, $5) RETURNING *`,
+    [firstName, lastName, email.toLowerCase(), googleId, role]
+  );
+  return rows[0];
+}
+
+async function linkGoogleId(id, googleId) {
+  const { rows } = await pool.query('UPDATE users SET google_id = $2 WHERE id = $1 RETURNING *', [id, googleId]);
+  return rows[0];
+}
+
 async function findById(id) {
   const { rows } = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
   return rows[0] || null;
@@ -59,6 +78,9 @@ async function listAllWithStats() {
 module.exports = {
   create,
   findByEmail,
+  findByGoogleId,
+  createFromGoogle,
+  linkGoogleId,
   findById,
   setRole,
   updateProfile,

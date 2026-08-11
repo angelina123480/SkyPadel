@@ -8,6 +8,9 @@ router.post('/register', authController.register);
 router.get('/login', authController.showLogin);
 router.post('/login', authController.login);
 
+router.get('/auth/google', authController.googleStart);
+router.get('/auth/google/callback', authController.googleCallback);
+
 router.post('/logout', authController.logout);
 
 router.get('/forgot-password', authController.showForgotPassword);

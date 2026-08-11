@@ -826,6 +826,17 @@ a { transition: color .15s ease; }
 .sky-form-links { font-size: 13px; color: var(--sky-text-light); margin-top: 18px; text-align: center; }
 .sky-form-links a { color: var(--sky-green); font-weight: 600; }
 
+.auth-divider { display: flex; align-items: center; gap: 14px; margin: 26px 0; color: var(--sky-text-light); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--sky-border); }
+.btn-google {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 11px 20px; border-radius: 30px;
+  background: var(--sky-white); border: 2px solid var(--sky-border); color: var(--sky-text);
+  font-size: 13px; font-weight: 600; text-decoration: none; transition: all .2s ease;
+}
+.btn-google:hover, .btn-google:focus { border-color: #b9c2c8; background: var(--sky-light); color: var(--sky-text); text-decoration: none; }
+.btn-google svg { width: 18px; height: 18px; flex-shrink: 0; }
+
 /* ==========================================================================
    Star ratings
    ========================================================================== */

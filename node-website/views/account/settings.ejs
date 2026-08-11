@@ -24,14 +24,17 @@
     <div class="row">
       <div class="col-sm-6">
         <div class="checkout-card">
-          <h3>Change Password</h3>
+          <h3><%= hasPassword ? 'Change Password' : 'Set a Password' %></h3>
+          <% if (!hasPassword) { %><p class="admin-empty-note">Your account signed in with Google and has no password yet — set one here if you'd also like to sign in with email.</p><% } %>
           <% if (passwordUpdated) { %><div class="form-success-banner">Password updated.</div><% } %>
           <form class="sky-form" method="POST" action="/account/settings/password">
+            <% if (hasPassword) { %>
             <div class="form-group">
               <label for="currentPassword">Current Password</label>
               <input type="password" id="currentPassword" name="currentPassword" class="form-control <%= errors.currentPassword ? 'has-error' : '' %>" required>
               <% if (errors.currentPassword) { %><span class="field-error"><%= errors.currentPassword %></span><% } %>
             </div>
+            <% } %>
             <div class="form-group">
               <label for="newPassword">New Password</label>
               <input type="password" id="newPassword" name="newPassword" class="form-control <%= errors.newPassword ? 'has-error' : '' %>" required minlength="8">
@@ -42,7 +45,7 @@
               <input type="password" id="confirmPassword" name="confirmPassword" class="form-control <%= errors.confirmPassword ? 'has-error' : '' %>" required minlength="8">
               <% if (errors.confirmPassword) { %><span class="field-error"><%= errors.confirmPassword %></span><% } %>
             </div>
-            <button type="submit" class="btn-sky btn-sky-yellow">Update Password</button>
+            <button type="submit" class="btn-sky btn-sky-yellow"><%= hasPassword ? 'Update Password' : 'Set Password' %></button>
           </form>
         </div>
       </div>
