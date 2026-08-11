@@ -15,10 +15,11 @@ async function showCheckout(req, res, next) {
       return res.redirect('/cart');
     }
     const totals = Cart.computeTotals(items);
-    const [savedAddress, enabledZones] = await Promise.all([
+    const [savedAddress, zones] = await Promise.all([
       Address.getDefaultForUser(req.currentUser.id),
-      DeliveryZone.listEnabledNames()
+      DeliveryZone.listAll()
     ]);
+    const enabledZones = zones.filter((z) => z.enabled).map((z) => z.name);
     const savedCity = savedAddress ? savedAddress.city : '';
 
     res.render('checkout/index', {
@@ -27,6 +28,7 @@ async function showCheckout(req, res, next) {
       items,
       totals,
       errors: {},
+      zones,
       enabledZones,
       country: COUNTRY,
       values: {
@@ -53,7 +55,8 @@ async function placeOrder(req, res, next) {
       return res.redirect('/cart');
     }
     const totals = Cart.computeTotals(items);
-    const enabledZones = await DeliveryZone.listEnabledNames();
+    const zones = await DeliveryZone.listAll();
+    const enabledZones = zones.filter((z) => z.enabled).map((z) => z.name);
 
     const shippingBody = { ...req.body, country: COUNTRY };
     const shippingErrors = validateShipping(shippingBody);
@@ -67,7 +70,7 @@ async function placeOrder(req, res, next) {
 
     if (Object.keys(errors).length) {
       return res.status(400).render('checkout/index', {
-        page: 'Checkout', menuId: 'shop', items, totals, errors, enabledZones, country: COUNTRY,
+        page: 'Checkout', menuId: 'shop', items, totals, errors, zones, enabledZones, country: COUNTRY,
         values: { ...req.body, cardNumber: '', cvv: '' }
       });
     }
@@ -90,9 +93,10 @@ async function placeOrder(req, res, next) {
         const cart = await ensureCart(req);
         const items = await Cart.getItemsWithProducts(cart.id);
         const totals = Cart.computeTotals(items);
-        const enabledZones = await DeliveryZone.listEnabledNames();
+        const zones = await DeliveryZone.listAll();
+        const enabledZones = zones.filter((z) => z.enabled).map((z) => z.name);
         return res.status(400).render('checkout/index', {
-          page: 'Checkout', menuId: 'shop', items, totals, errors: { form: err.message }, enabledZones, country: COUNTRY,
+          page: 'Checkout', menuId: 'shop', items, totals, errors: { form: err.message }, zones, enabledZones, country: COUNTRY,
           values: { ...req.body, cardNumber: '', cvv: '' }
         });
       } catch (innerErr) {

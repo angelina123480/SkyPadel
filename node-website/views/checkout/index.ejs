@@ -81,6 +81,34 @@
                 </div>
               </div>
             </div>
+
+            <% var zoneByName = {}; zones.forEach(function (z) { zoneByName[z.name] = z; }); %>
+            <div class="zone-picker">
+              <p class="zone-picker-label">Or pick your governorate on the map</p>
+              <svg viewBox="0 0 320 500" class="zone-map zone-map-picker" role="img" aria-label="Pick your governorate on the map of Lebanon">
+                <polygon class="zone-shape zone-pick <%= zoneByName['Akkar'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Akkar' ? 'zone-selected' : '' %>" data-zone-name="Akkar" data-enabled="<%= zoneByName['Akkar'].enabled %>" points="80,20 260,20 250,90 90,90"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['North Lebanon'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'North Lebanon' ? 'zone-selected' : '' %>" data-zone-name="North Lebanon" data-enabled="<%= zoneByName['North Lebanon'].enabled %>" points="90,90 190,90 185,190 75,190"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['Baalbek-Hermel'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Baalbek-Hermel' ? 'zone-selected' : '' %>" data-zone-name="Baalbek-Hermel" data-enabled="<%= zoneByName['Baalbek-Hermel'].enabled %>" points="190,90 250,90 275,230 185,190"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['Mount Lebanon'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Mount Lebanon' ? 'zone-selected' : '' %>" data-zone-name="Mount Lebanon" data-enabled="<%= zoneByName['Mount Lebanon'].enabled %>" points="75,190 185,190 195,340 70,335"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['Beqaa'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Beqaa' ? 'zone-selected' : '' %>" data-zone-name="Beqaa" data-enabled="<%= zoneByName['Beqaa'].enabled %>" points="185,190 275,230 280,370 195,340"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['South Lebanon'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'South Lebanon' ? 'zone-selected' : '' %>" data-zone-name="South Lebanon" data-enabled="<%= zoneByName['South Lebanon'].enabled %>" points="70,335 195,340 185,430 75,425"></polygon>
+                <polygon class="zone-shape zone-pick <%= zoneByName['Nabatieh'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Nabatieh' ? 'zone-selected' : '' %>" data-zone-name="Nabatieh" data-enabled="<%= zoneByName['Nabatieh'].enabled %>" points="195,340 280,370 270,460 185,430"></polygon>
+
+                <text x="165" y="60" class="zone-label">Akkar</text>
+                <text x="128" y="145" class="zone-label">North<tspan x="128" dy="14">Lebanon</tspan></text>
+                <text x="222" y="150" class="zone-label">Baalbek-<tspan x="222" dy="14">Hermel</tspan></text>
+                <text x="128" y="270" class="zone-label">Mount<tspan x="128" dy="14">Lebanon</tspan></text>
+                <text x="228" y="285" class="zone-label">Beqaa</text>
+                <text x="118" y="385" class="zone-label">South<tspan x="118" dy="14">Lebanon</tspan></text>
+                <text x="222" y="405" class="zone-label">Nabatieh</text>
+
+                <line x1="25" y1="265" x2="58" y2="265" class="zone-leader"></line>
+                <circle class="zone-shape zone-shape-circle zone-pick <%= zoneByName['Beirut'].enabled ? 'zone-on' : 'zone-off' %> <%= values.city === 'Beirut' ? 'zone-selected' : '' %>" data-zone-name="Beirut" data-enabled="<%= zoneByName['Beirut'].enabled %>" cx="65" cy="265" r="9"></circle>
+                <text x="18" y="255" class="zone-label">Beirut</text>
+              </svg>
+              <p class="zone-map-hint">Green = we deliver there. Gray areas aren't available yet.</p>
+            </div>
+
             <div class="form-group">
               <label for="addressLine">Address</label>
               <input type="text" id="addressLine" name="addressLine" class="form-control <%= errors.addressLine ? 'has-error' : '' %>" value="<%= values.addressLine || '' %>" required>

@@ -1059,6 +1059,12 @@ a { transition: color .15s ease; }
 .zone-switch input:checked + .zone-switch-track { background: var(--sky-green); }
 .zone-switch input:checked + .zone-switch-track::before { transform: translateX(18px); }
 
+.zone-picker { margin-bottom: 22px; }
+.zone-picker-label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .5px; color: var(--sky-text-light); margin-bottom: 10px; }
+.zone-map-picker { max-height: 260px; }
+.zone-shape.zone-off.zone-pick { cursor: not-allowed; }
+.zone-shape.zone-selected { stroke: var(--sky-navy); stroke-width: 4; }
+
 /* ==========================================================================
    Empty state (shared)
    ========================================================================== */
